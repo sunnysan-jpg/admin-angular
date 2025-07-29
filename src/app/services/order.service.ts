@@ -9,7 +9,7 @@ import { Order } from '../order.model';
   providedIn: 'root'
 })
 export class OrderService {
-  private apiUrl = 'http://localhost:5000/api/orders';
+  private apiUrl = 'https://ecommerce-mushroom.onrender.com/api/orders';
 
   constructor(private http: HttpClient) {}
 
