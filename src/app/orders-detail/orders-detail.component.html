@@ -1,0 +1,20 @@
+<div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+  <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md space-y-4">
+    <h3 class="text-lg font-semibold">Order #{{ order.id }}</h3>
+
+    <!-- <p><strong>Customer:</strong> {{ order.customerName }}</p> -->
+    <!-- <p><strong>Status:</strong> {{ order.status }}</p> -->
+    <p><strong>Total:</strong> ₹{{ order.total }}</p>
+
+    <h4 class="mt-4 font-semibold">Items:</h4>
+    <ul class="list-disc pl-6">
+      <!-- <li *ngFor="let item of order">
+        {{ item.name }} × {{ item.quantity }} (₹{{ item.price }})
+      </li> -->
+    </ul>
+
+    <div class="flex justify-end mt-4">
+      <button class="px-4 py-2 bg-gray-300 rounded" (click)="closeModal()">Close</button>
+    </div>
+  </div>
+</div>

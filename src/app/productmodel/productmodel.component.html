@@ -1,0 +1,53 @@
+<div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5); z-index: 1050;">
+  <div class="modal-dialog">
+    <div class="modal-content border-0 shadow">
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+        <div class="modal-header">
+          <h5 class="modal-title">Add New Product</h5>
+          <button type="button" class="btn-close" (click)="cancel.emit()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="prod-name" class="form-label">Product Name</label>
+            <input id="prod-name" formControlName="name" type="text" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="prod-cat" class="form-label">Category</label>
+            <select id="prod-cat" formControlName="category" class="form-select" required>
+              <option value="">Select Category</option>
+              <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Price (₹)</label>
+            <input formControlName="price" type="number" class="form-control" min="0" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Stock Quantity</label>
+            <input formControlName="stock" type="number" class="form-control" min="0" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea formControlName="description" rows="2" class="form-control"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Product Image</label>
+            <input type="file" (change)="onFileChange($event)" class="form-control" accept="image/*">
+          </div>
+          
+          <div class="mb-3">
+            <label for="prod-act" class="form-label">Status</label>
+            <select id="prod-act" formControlName="status" class="form-select" required>
+              <option value=true>Active</option>
+              <option value=false>InActive</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success w-50" [disabled]="productForm.invalid">Add Product</button>
+          <button type="button" class="btn btn-secondary w-50" (click)="cancel.emit()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+<div class="dashboard-wrapper">
+  <h2>Dashboard Overview</h2>
+
+  <div class="stat-cards">
+    <div class="card">
+      <h4>Total Products</h4>
+      <p>3</p>
+      <span class="icon blue">📦</span>
+    </div>
+    <div class="card">
+      <h4>Total Orders</h4>
+      <p>3</p>
+      <span class="icon green">🛒</span>
+    </div>
+    <div class="card">
+      <h4>Total Revenue</h4>
+      <p>₹1620</p>
+      <span class="icon purple">💰</span>
+    </div>
+    <div class="card">
+      <h4>Low Stock Items</h4>
+      <p>1</p>
+      <span class="icon red">📦</span>
+    </div>
+  </div>
+
+  <div class="recent-orders card">
+    <h4>Recent Orders</h4>
+    <div class="order" *ngFor="let order of orders">
+      <div>
+        <strong>{{ order.name }}</strong><br />
+        ₹{{ order.amount }}
+      </div>
+      <span class="status" [ngClass]="order.status">{{ order.status }}</span>
+    </div>
+  </div>
+
+  <div class="low-stock card">
+    <h4>Low Stock Alert</h4>
+    <div class="alert-item">
+      <div>
+        <strong>Shiitake Mushroom</strong><br />
+        <small>Premium</small>
+      </div>
+      <span class="stock-alert">15 left</span>
+    </div>
+  </div>
+</div>

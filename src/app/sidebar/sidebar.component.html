@@ -1,0 +1,15 @@
+<aside class="sidebar" *ngIf="isAdmin">
+  <nav>
+    <ul>
+      <li>
+        <button (click)="setTab('dashboard')" [class.active]="activeTab === 'dashboard'">📊 Dashboard</button>
+      </li>
+      <li>
+        <button (click)="setTab('products')" [class.active]="activeTab === 'products'">📦 Products</button>
+      </li>
+      <li>
+        <button (click)="setTab('orders')" [class.active]="activeTab === 'orders'">🛒 Orders</button>
+      </li>
+    </ul>
+  </nav>
+</aside>

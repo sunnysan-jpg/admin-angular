@@ -1,0 +1,151 @@
+<!-- <div class="container">
+  <h2>Product Management</h2>
+
+  <div class="header">
+    <button mat-raised-button color="primary" (click)="openAddProductModal()">+ Add Product</button>
+  </div>
+
+  <table class="product-table">
+    <thead>
+      <tr>
+        <th>PRODUCT</th>
+        <th>CATEGORY</th>
+        <th>PRICE</th>
+        <th>STOCK</th>
+        <th>STATUS</th>
+        <th>ACTIONS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td class="product-name">
+          <img [src]="product.imageUrl" alt="product image" />
+          <span>{{ product.name }}</span>
+        </td>
+        <td>{{ product.category }}</td>
+        <td>₹{{ product.price }}</td>
+        <td [ngClass]="{'low-stock': product.stock < 20}">{{ product.stock }}</td>
+        <td><span class="status-active">{{ product.status }}</span></td>
+        <td>
+          <button mat-icon-button><mat-icon>edit</mat-icon></button>
+          <button mat-icon-button><mat-icon>delete</mat-icon></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div> -->
+
+
+
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-dark mb-0">Product Management</h2>
+    <button class="btn btn-success" (click)="openAddProduct()">
+      <i class="bi bi-plus-circle"></i> Add Product
+    </button>
+  </div>
+  <div class="card shadow-sm mb-3">
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let product of product">
+          <td>
+            <div class="d-flex align-items-center">
+              <img *ngIf="product.image_url" [src]="product.image_url" alt="img" class="rounded me-2" width="48" height="48">
+              <span class="fw-semibold">{{ product.name }}</span>
+            </div>
+          </td>
+          <td>{{ product.category_id }}</td>
+          <td>₹{{ product.price }}</td>
+          <td>
+            <span [class.text-danger]="product.stock_quantity < 20" [class.fw-bold]="product.stock_quantity < 20">{{ product.stock_quantity }}</span>
+          </td>
+          <td>
+            <span class="badge bg-success">{{ product.status }}</span>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary me-1" (click)="onEdit(product)">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger" (click)="onDelete(product.id)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Add/Edit Product Modal -->
+  <div *ngIf="showAddProduct" class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.35); z-index:1050;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form [formGroup]="addProductForm" (ngSubmit)="submitAddProduct()">
+          <div class="modal-header">
+            <h5 class="modal-title">{{ editingProduct ? 'Edit Product' : 'Add New Product' }}</h5>
+            <button type="button" class="btn-close" (click)="showAddProduct = false" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Product Name</label>
+              <input type="text" formControlName="name" class="form-control" [class.is-invalid]="addProductForm.get('name')?.touched && addProductForm.get('name')?.invalid" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Category</label>
+              <select formControlName="category" class="form-select" required>
+                <option value="">Select Category</option>
+                <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Price (₹)</label>
+              <input type="number" formControlName="price" class="form-control" min="0" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Stock Quantity</label>
+              <input type="number" formControlName="stock" class="form-control" min="0" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea formControlName="description" rows="2" class="form-control"></textarea>
+            </div>
+        <div class="mb-3">
+  <label class="form-label">Product Images</label>
+  <input type="file" (change)="onFileChange($event)" class="form-control" accept="image/*" multiple>
+
+  <div *ngIf="previewUrls.length > 0" class="mt-2 d-flex gap-2 flex-wrap">
+    <img *ngFor="let url of previewUrls" [src]="url" alt="Preview" style="height: 48px; width: auto;">
+  </div>
+</div>
+
+                        <div class="mb-3">
+              <label class="form-label">Status</label>
+              <select formControlName="status" class="form-select" required>
+                <option value=true>Active</option>
+                <option value=false>InActive</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" [disabled]="addProductForm.invalid" class="btn btn-success">
+              {{ editingProduct ? 'Update Product' : 'Add Product' }}
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="showAddProduct = false">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
