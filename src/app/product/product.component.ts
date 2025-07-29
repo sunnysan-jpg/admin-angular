@@ -30,7 +30,7 @@ export class ProductComponent  {
   constructor(private fb: FormBuilder,private snackBar: MatSnackBar,private productService: ProductService,private router: Router) {
     this.addProductForm = this.fb.group({
       name: ['', Validators.required],
-      category: ['', Validators.required],
+      category: [''],
       price: [0, [Validators.required, Validators.min(0)]],
       stock: [0, [Validators.required, Validators.min(0)]],
       description: [''],
