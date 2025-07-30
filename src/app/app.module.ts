@@ -37,6 +37,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { OrdersComponent } from './orders/orders.component';
 import { OrderDetailsModalComponent } from './orders-detail/orders-detail.component';
+import { CategoryDialogComponent } from './category-dialog/category-dialog.component';
 
 
 
@@ -51,7 +52,8 @@ import { OrderDetailsModalComponent } from './orders-detail/orders-detail.compon
     LoginComponent,
     RegisterComponent,
     OrdersComponent,
-    OrderDetailsModalComponent
+    OrderDetailsModalComponent,
+    CategoryDialogComponent
   ],
   imports: [
     BrowserModule,
