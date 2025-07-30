@@ -47,4 +47,9 @@ export class ProductService {
   getCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(`${this.apiUrl}/categories`);
   }
+
+
+    createCategories(newCat: any): Observable<Category> {
+    return this.http.post<Category>(`${this.apiUrl}/addcat`, newCat);
+  }
 }

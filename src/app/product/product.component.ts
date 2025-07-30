@@ -3,12 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ProductService } from '../services/product.service';
 import { Product } from '../product.model';
-import { MatDialog } from '@angular/material/dialog';
 import { ProductmodelComponent } from '../productmodel/productmodel.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-
+import { MatDialog } from '@angular/material/dialog';
+import { CategoryDialogComponent } from '../category-dialog/category-dialog.component';
 
 @Component({
   selector: 'app-product',
@@ -27,7 +27,7 @@ export class ProductComponent  {
   // For editing
   editingProduct: Product | null = null;
 
-  constructor(private fb: FormBuilder,private snackBar: MatSnackBar,private productService: ProductService,private router: Router) {
+  constructor(private fb: FormBuilder,private snackBar: MatSnackBar,private productService: ProductService,private router: Router,private dialog: MatDialog) {
     this.addProductForm = this.fb.group({
       name: ['', Validators.required],
       category: [''],
@@ -100,6 +100,8 @@ selectedFiles: File[] = [];
     this.product = this.product.filter((p) => p.id !== productId);
   }
 
+  
+
   // onFileChange(event: any) {
   //   const file = event.target.files[0];
   //   if (file) {
@@ -111,6 +113,23 @@ selectedFiles: File[] = [];
   //     reader.readAsDataURL(file);
   //   }
   // }
+
+
+  openCategoryDialog() {
+  const dialogRef = this.dialog.open(CategoryDialogComponent, {
+    width: '500px'
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.categories.push(result);
+      this.addProductForm.patchValue({ category: result.id });
+          this.productService.getCategories().subscribe(data =>{
+      this.categories = data
+    })
+    }
+  });
+}
 
 
  onFileChange(event: any) {
