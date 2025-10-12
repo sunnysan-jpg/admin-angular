@@ -1,48 +1,230 @@
 <div class="dashboard-wrapper">
-  <h2>Dashboard Overview</h2>
-
-  <div class="stat-cards">
-    <div class="card">
-      <h4>Total Products</h4>
-      <p>3</p>
-      <span class="icon blue">📦</span>
+  <!-- Header with Real-Time Clock -->
+  <div class="dashboard-header">
+    <div class="header-left">
+      <h2>Welcome back, {{adminName}}! 👋</h2>
+      <p class="subtitle">Here's what's happening with your store today</p>
     </div>
-    <div class="card">
-      <h4>Total Orders</h4>
-      <p>3</p>
-      <span class="icon green">🛒</span>
-    </div>
-    <div class="card">
-      <h4>Total Revenue</h4>
-      <p>₹1620</p>
-      <span class="icon purple">💰</span>
-    </div>
-    <div class="card">
-      <h4>Low Stock Items</h4>
-      <p>1</p>
-      <span class="icon red">📦</span>
+    <div class="header-right">
+      <div class="live-time">
+        <span class="time">{{currentTime}}</span>
+        <span class="date">{{currentDate}}</span>
+      </div>
     </div>
   </div>
 
-  <div class="recent-orders card">
-    <h4>Recent Orders</h4>
-    <div class="order" *ngFor="let order of orders">
-      <div>
-        <strong>{{ order.name }}</strong><br />
-        ₹{{ order.amount }}
+  <!-- Key Metrics Cards with Animations -->
+  <div class="metrics-grid">
+    <div class="metric-card revenue">
+      <div class="metric-icon">💰</div>
+      <div class="metric-content">
+        <h3>Total Revenue</h3>
+        <div class="metric-value">
+          ₹{{stats.totalRevenue | number}}
+          <span class="trend up" *ngIf="stats.revenueTrend > 0">
+            <i class="arrow">↑</i> {{stats.revenueTrend}}%
+          </span>
+        </div>
+        <p class="metric-label">vs last month</p>
       </div>
-      <span class="status" [ngClass]="order.status">{{ order.status }}</span>
+      <div class="sparkline-mini">
+        <canvas baseChart
+                [data]="revenueSparklineData"
+                [options]="sparklineOptions"
+                [type]="'line'"></canvas>
+      </div>
+    </div>
+
+    <div class="metric-card orders">
+      <div class="metric-icon">🛒</div>
+      <div class="metric-content">
+        <h3>Total Orders</h3>
+        <div class="metric-value">
+          {{stats.totalOrders}}
+          <span class="trend up" *ngIf="stats.ordersTrend > 0">
+            <i class="arrow">↑</i> {{stats.ordersTrend}}%
+          </span>
+        </div>
+        <p class="metric-label">{{stats.pendingOrders}} pending</p>
+      </div>
+      <div class="pulse-indicator"></div>
+    </div>
+
+    <div class="metric-card products">
+      <div class="metric-icon">📦</div>
+      <div class="metric-content">
+        <h3>Products</h3>
+        <div class="metric-value">
+          {{stats.totalProducts}}
+        </div>
+        <p class="metric-label">{{stats.lowStockItems}} low stock</p>
+      </div>
+      <div class="progress-ring">
+        <svg width="60" height="60">
+          <circle cx="30" cy="30" r="25" 
+                  stroke="#e5e7eb" 
+                  stroke-width="4" 
+                  fill="none"/>
+          <circle cx="30" cy="30" r="25" 
+                  [attr.stroke-dasharray]="getStockProgress()"
+                  stroke="#3b82f6" 
+                  stroke-width="4" 
+                  fill="none"
+                  transform="rotate(-90 30 30)"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="metric-card customers">
+      <div class="metric-icon">👥</div>
+      <div class="metric-content">
+        <h3>Customers</h3>
+        <div class="metric-value">
+          {{stats.totalCustomers}}
+          <span class="trend up" *ngIf="stats.newCustomers > 0">
+            <i class="arrow">↑</i> {{stats.newCustomers}} new
+          </span>
+        </div>
+        <p class="metric-label">this month</p>
+      </div>
     </div>
   </div>
 
-  <div class="low-stock card">
-    <h4>Low Stock Alert</h4>
-    <div class="alert-item">
-      <div>
-        <strong>Shiitake Mushroom</strong><br />
-        <small>Premium</small>
+  <!-- Charts Section -->
+  <div class="charts-grid">
+    <!-- Revenue Chart -->
+    <div class="chart-card large">
+      <div class="card-header">
+        <h3>Revenue Overview</h3>
+        <div class="time-filters">
+          <button [class.active]="revenueFilter === '7d'" (click)="setRevenueFilter('7d')">7 Days</button>
+          <button [class.active]="revenueFilter === '30d'" (click)="setRevenueFilter('30d')">30 Days</button>
+          <button [class.active]="revenueFilter === '90d'" (click)="setRevenueFilter('90d')">90 Days</button>
+        </div>
       </div>
-      <span class="stock-alert">15 left</span>
+      <div class="chart-container">
+        <canvas baseChart
+                [data]="revenueChartData"
+                [options]="revenueChartOptions"
+                [type]="'line'"></canvas>
+      </div>
+    </div>
+
+    <!-- Order Status Distribution -->
+    <div class="chart-card medium">
+      <div class="card-header">
+        <h3>Order Status</h3>
+      </div>
+      <div class="chart-container">
+        <canvas baseChart
+                [data]="orderStatusChartData"
+                [options]="doughnutChartOptions"
+                [type]="'doughnut'"></canvas>
+      </div>
+    </div>
+
+    <!-- Top Products -->
+    <div class="chart-card medium">
+      <div class="card-header">
+        <h3>Top Selling Products</h3>
+      </div>
+      <div class="chart-container">
+        <canvas baseChart
+                [data]="topProductsChartData"
+                [options]="barChartOptions"
+                [type]="'bar'"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Orders & Alerts -->
+  <div class="bottom-section">
+    <!-- Recent Orders -->
+    <div class="recent-orders card">
+      <div class="card-header">
+        <h3>Recent Orders</h3>
+        <a routerLink="/orders" class="view-all">View All →</a>
+      </div>
+      <div class="orders-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of recentOrders" class="order-row">
+              <td><strong>#{{order.id}}</strong></td>
+              <td>
+                <div class="customer-info">
+                  <div class="avatar-sm">{{order.customerInitial}}</div>
+                  <span>{{order.customerName}}</span>
+                </div>
+              </td>
+              <td>₹{{order.amount}}</td>
+              <td>
+                <span class="status-badge" [ngClass]="order.status">
+                  {{order.status}}
+                </span>
+              </td>
+              <td>{{order.date | date: 'short'}}</td>
+              <td>
+                <button class="btn-icon" (click)="viewOrder(order.id)">
+                  👁️
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Alerts & Notifications -->
+    <div class="alerts-section card">
+      <div class="card-header">
+        <h3>Alerts & Notifications</h3>
+      </div>
+      <div class="alerts-list">
+        <div class="alert-item critical" *ngFor="let alert of criticalAlerts">
+          <div class="alert-icon">⚠️</div>
+          <div class="alert-content">
+            <strong>{{alert.title}}</strong>
+            <p>{{alert.message}}</p>
+            <span class="alert-time">{{alert.time}}</span>
+          </div>
+          <button class="btn-resolve" (click)="resolveAlert(alert.id)">Resolve</button>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="quick-stats">
+        <div class="quick-stat">
+          <span class="stat-icon">⏰</span>
+          <div>
+            <strong>{{stats.avgDeliveryTime}}</strong>
+            <p>Avg Delivery Time</p>
+          </div>
+        </div>
+        <div class="quick-stat">
+          <span class="stat-icon">⭐</span>
+          <div>
+            <strong>{{stats.avgRating}}</strong>
+            <p>Customer Rating</p>
+          </div>
+        </div>
+        <div class="quick-stat">
+          <span class="stat-icon">📦</span>
+          <div>
+            <strong>{{stats.fulfillmentRate}}%</strong>
+            <p>Fulfillment Rate</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

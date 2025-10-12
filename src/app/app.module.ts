@@ -10,7 +10,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProductComponent } from './product/product.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ProductmodelComponent } from './productmodel/productmodel.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
@@ -38,6 +38,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { OrdersComponent } from './orders/orders.component';
 import { OrderDetailsModalComponent } from './orders-detail/orders-detail.component';
 import { CategoryDialogComponent } from './category-dialog/category-dialog.component';
+import { NgChartsModule } from 'ng2-charts';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; // ⬅️ THIS WAS MISSING!
+import { MatCheckboxModule } from '@angular/material/checkbox'; // ⬅️ ADD THIS TOO!
+
 
 
 
@@ -62,6 +66,7 @@ import { CategoryDialogComponent } from './category-dialog/category-dialog.compo
     HttpClientModule,
     ReactiveFormsModule,
         MatToolbarModule,
+         FormsModule, 
     MatButtonModule,
     MatCardModule,
     MatInputModule,
@@ -74,7 +79,10 @@ import { CategoryDialogComponent } from './category-dialog/category-dialog.compo
     MatSnackBarModule,
     MatSelectModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    NgChartsModule,
+      MatProgressSpinnerModule, // ⬅️ THIS FIXES THE ERROR!
+    MatCheckboxModule 
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

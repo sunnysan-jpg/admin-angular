@@ -1,15 +1,112 @@
 <aside class="sidebar" *ngIf="isAdmin">
   <nav>
     <ul>
+      <!-- Dashboard -->
       <li>
-        <button (click)="setTab('dashboard')" [class.active]="activeTab === 'dashboard'">📊 Dashboard</button>
+        <button 
+          (click)="setTab('dashboard')" 
+          [class.active]="activeTab === 'dashboard'">
+          <span class="icon">📊</span>
+          Dashboard
+        </button>
       </li>
+
+      <!-- Analytics -->
       <li>
-        <button (click)="setTab('products')" [class.active]="activeTab === 'products'">📦 Products</button>
+        <button 
+          (click)="setTab('analytics')" 
+          [class.active]="activeTab === 'analytics'">
+          <span class="icon">📈</span>
+          Analytics
+          <span class="badge">New</span>
+        </button>
       </li>
+
+      <!-- Products -->
       <li>
-        <button (click)="setTab('orders')" [class.active]="activeTab === 'orders'">🛒 Orders</button>
+        <button 
+          (click)="setTab('products')" 
+          [class.active]="activeTab === 'products'">
+          <span class="icon">📦</span>
+          Products
+          <span class="badge">{{productCount}}</span>
+        </button>
+      </li>
+
+      <!-- Categories -->
+      <li>
+        <button 
+          (click)="setTab('categories')" 
+          [class.active]="activeTab === 'categories'">
+          <span class="icon">🏷️</span>
+          Categories
+        </button>
+      </li>
+
+      <!-- Orders -->
+      <li>
+        <button 
+          (click)="setTab('orders')" 
+          [class.active]="activeTab === 'orders'">
+          <span class="icon">🛒</span>
+          Orders
+          <span class="badge" *ngIf="pendingOrdersCount > 0">{{pendingOrdersCount}}</span>
+        </button>
+      </li>
+
+      <!-- Customers -->
+      <li>
+        <button 
+          (click)="setTab('customers')" 
+          [class.active]="activeTab === 'customers'">
+          <span class="icon">👥</span>
+          Customers
+        </button>
+      </li>
+
+      <!-- Inventory -->
+      <li>
+        <button 
+          (click)="setTab('inventory')" 
+          [class.active]="activeTab === 'inventory'">
+          <span class="icon">📋</span>
+          Inventory
+          <span class="badge" *ngIf="lowStockCount > 0" style="background: #f59e0b;">{{lowStockCount}}</span>
+        </button>
+      </li>
+
+      <!-- Reports -->
+      <li>
+        <button 
+          (click)="setTab('reports')" 
+          [class.active]="activeTab === 'reports'">
+          <span class="icon">📊</span>
+          Reports
+        </button>
+      </li>
+
+      <!-- Settings -->
+      <li>
+        <button 
+          (click)="setTab('settings')" 
+          [class.active]="activeTab === 'settings'">
+          <span class="icon">⚙️</span>
+          Settings
+        </button>
       </li>
     </ul>
   </nav>
+
+  <!-- Sidebar Footer with Admin Info -->
+  <div class="sidebar-footer">
+    <div class="admin-info">
+      <div class="avatar">
+        {{getInitials()}}
+      </div>
+      <div class="info">
+        <div class="name">{{adminName}}</div>
+        <div class="role">Administrator</div>
+      </div>
+    </div>
+  </div>
 </aside>
