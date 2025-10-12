@@ -1,18 +1,239 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+/* File: src/styles.scss */
+/* Add this to your GLOBAL styles file */
 
-/* FontAwesome Icons */
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
-
-/* Custom styles */
-body {
+/* Reset and Base Styles */
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  box-sizing: border-box;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Dark Theme Background - THIS IS KEY! */
+body {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+  min-height: 100vh;
+  color: #fff !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Ensure html also has dark background */
+html {
+  background: #0f172a;
+}
+
+/* Custom Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Material Design Overrides for Dark Theme */
+.mat-toolbar,
+.mat-card,
+.mat-form-field,
+.mat-select,
+.mat-dialog-container {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #fff !important;
+}
+
+/* Remove any white backgrounds from Material components */
+.mat-drawer-container {
+  background: transparent !important;
+}
+
+/* Ensure all text is white on dark background */
+p, h1, h2, h3, h4, h5, h6, span, div, label {
+  color: inherit;
+}
+
+// File: src/styles.scss
+// ADD this to your global styles file (at the bottom)
+
+/* Custom Snackbar Styles */
+.success-snackbar {
+  background: #10b981 !important;
+  color: #fff !important;
+
+  .mat-mdc-snack-bar-label {
+    color: #fff !important;
+  }
+
+  .mat-mdc-button {
+    color: #fff !important;
+  }
+}
+
+.error-snackbar {
+  background: #ef4444 !important;
+  color: #fff !important;
+
+  .mat-mdc-snack-bar-label {
+    color: #fff !important;
+  }
+
+  .mat-mdc-button {
+    color: #fff !important;
+  }
+}
+
+.warning-snackbar {
+  background: #f59e0b !important;
+  color: #fff !important;
+
+  .mat-mdc-snack-bar-label {
+    color: #fff !important;
+  }
+
+  .mat-mdc-button {
+    color: #fff !important;
+  }
+}
+
+// Material Snackbar positioning
+.mat-mdc-snack-bar-container {
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+}
+
+// ADD THIS TO: src/styles.scss (at the bottom)
+
+/* ============================================
+   CUSTOM SNACKBAR STYLES
+   ============================================ */
+
+.success-snackbar {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.4) !important;
+
+  .mat-mdc-snack-bar-label {
+    color: #fff !important;
+    font-weight: 600 !important;
+  }
+
+  .mat-mdc-button {
+    color: #fff !important;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+    }
+  }
+}
+
+.error-snackbar {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 32px rgba(239, 68, 68, 0.4) !important;
+
+  .mat-mdc-snack-bar-label {
+    color: #fff !important;
+    font-weight: 600 !important;
+  }
+
+  .mat-mdc-button {
+    color: #fff !important;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+    }
+  }
+}
+
+.warning-snackbar {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 32px rgba(245, 158, 11, 0.4) !important;
+
+  .mat-mdc-snack-bar-label {
+    color: #fff !important;
+    font-weight: 600 !important;
+  }
+
+  .mat-mdc-button {
+    color: #fff !important;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+    }
+  }
+}
+
+.info-snackbar {
+  background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.4) !important;
+
+  .mat-mdc-snack-bar-label {
+    color: #fff !important;
+    font-weight: 600 !important;
+  }
+
+  .mat-mdc-button {
+    color: #fff !important;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+    }
+  }
+}
+
+// Material Snackbar container styling
+.mat-mdc-snack-bar-container {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  
+  .mdc-snackbar__surface {
+    border-radius: 12px !important;
+  }
+}
+
+/* ============================================
+   MATERIAL DESIGN OVERRIDES FOR DARK THEME
+   ============================================ */
+
+// Ensure form fields work well with dark theme
+.mat-mdc-form-field {
+  .mat-mdc-text-field-wrapper {
+    border-radius: 12px;
+  }
+}
+
+// Material icon sizing
+.mat-icon {
+  width: 24px !important;
+  height: 24px !important;
+  font-size: 24px !important;
+}
+
+// Checkbox styling
+.mat-mdc-checkbox {
+  .mdc-checkbox__background {
+    border-radius: 4px !important;
+  }
+}
+
+// Button hover effects
+.mat-mdc-button, .mat-mdc-raised-button, .mat-mdc-stroked-button {
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}

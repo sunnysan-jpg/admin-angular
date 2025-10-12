@@ -1,31 +1,53 @@
-// .main-wrapper {
-//   min-height: 100vh;
-//   background-color: #f7fafc;
-// }
+// File: src/app/app.component.scss
 
-// .content-layout {
-//   display: flex;
-// }
-
-// .main-content {
-//   flex: 1;
-//   padding: 24px;
-// }
-
-
+// Main wrapper for entire app
 .main-wrapper {
+  display: flex;
   min-height: 100vh;
-  background-color: #f7fafc;
+  width: 100%;
+  background: transparent;
 }
 
+// Content layout (sidebar + main content)
 .content-layout {
   display: flex;
+  flex: 1;
+  position: relative;
+  margin-top: 60px; // Space for header
 }
 
+// Main content area (dashboard, products, etc.)
 .main-content {
   flex: 1;
-  padding: 24px;
-  min-height: 100vh;
-  background-color: #f9fafb;
-}
+  margin-left: 280px; // Must match sidebar width
+  padding: 2rem;
+  min-height: calc(100vh - 60px);
+  width: calc(100% - 280px);
+  position: relative;
+  z-index: 1;
+  background: transparent;
   
+  // Responsive
+  @media (max-width: 1024px) {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+// Header positioning
+::ng-deep app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+// Sidebar positioning
+::ng-deep app-sidebar {
+  position: fixed;
+  left: 0;
+  top: 60px;
+  z-index: 100;
+  height: calc(100vh - 60px);
+}
