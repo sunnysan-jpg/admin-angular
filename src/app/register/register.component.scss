@@ -1,26 +1,284 @@
+// Main wrapper
 .auth-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 80vh;
-      padding: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: flex-start; /* pehle center tha, ab top se start */
+  justify-content: center;
+  padding-top: 80px; /* card ko thoda niche laane ke liye */
+  padding-bottom: 25px;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+
+// Animated background orbs (same as login)
+// Animated background orbs
+.bg-animation {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.gradient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.6;
+  animation: float 20s ease-in-out infinite;
+  
+  &.orb-1 {
+    width: 500px;
+    height: 500px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    top: -10%;
+    left: -10%;
+    animation-delay: 0s;
+  }
+  
+  &.orb-2 {
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    bottom: -10%;
+    right: -10%;
+    animation-delay: 7s;
+  }
+  
+  &.orb-3 {
+    width: 350px;
+    height: 350px;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: 14s;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 30px) scale(0.9);
+  }
+}
+
+// Register card (same design as login-card)
+.auth-card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 440px;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 17px 40px;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.5);
+  animation: slideUp 0.6s ease-out;
+      margin-top: -16px;
+}
+
+
+.card-glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.2) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// Header section
+.auth-header {
+  text-align: center;
+  margin-bottom: 40px;
+
+  h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0 0 8px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: #718096;
+    margin: 0;
+  }
+}
+
+// Form styling
+.form-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: -8px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.half-width {
+  flex: 1;
+  margin-bottom: 8px;
+}
+
+// Compact Angular Material fields
+::ng-deep {
+  .mat-mdc-text-field-wrapper {
+    height: 56px !important;
+  }
+
+  .mat-mdc-form-field-infix {
+    padding-top: 12px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    height: 16px !important;
+    margin-top: 2px !important;
+  }
+
+  .mat-mdc-floating-label {
+    top: 24px !important;
+  }
+
+  mat-icon.mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: #667eea;
+  }
+
+  .mat-mdc-form-field-error {
+    font-size: 12px;
+  }
+}
+
+// Submit button (same as login)
+.submit-button {
+  width: 100%;
+  height: 56px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  margin-top: 16px;
+  position: relative;
+  overflow: hidden;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .button-spinner {
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+}
+
+// Footer
+.auth-footer {
+  margin-top: 32px;
+  text-align: center;
+  color: #718096;
+  font-size: 15px;
+
+  .link {
+    color: #667eea;
+    font-weight: 600;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s ease;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      transition: width 0.3s ease;
     }
-    
-    .auth-card {
-      width: 100%;
-      max-width: 400px;
+
+    &:hover {
+      color: #764ba2;
+      &::after {
+        width: 100%;
+      }
     }
-    
-    .full-width {
-      width: 100%;
-      margin-bottom: 15px;
-    }
-    
-    mat-card-actions {
-      text-align: center;
-    }
-    
-    a {
-      color: #3f51b5;
-      text-decoration: none;
-    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 16px;
+  }
+
+  .auth-card {
+    padding: 40px 32px;
+  }
+
+  .auth-header h2 {
+    font-size: 28px;
+  }
+
+  .submit-button {
+    height: 52px;
+    font-size: 15px;
+  }
+}

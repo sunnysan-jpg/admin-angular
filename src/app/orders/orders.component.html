@@ -1,33 +1,230 @@
-<div class="space-y-6">
-  <h2 class="text-2xl font-bold text-gray-800">Orders</h2>
+<div class="orders-wrapper">
+  <!-- Header Section -->
+  <div class="header-section">
+    <h2>🛒 Order Management</h2>
+    <div class="header-actions">
+      <button class="btn-export" (click)="exportOrders()">
+        <span>📊</span> Export
+      </button>
+      <button class="btn-refresh" (click)="loadOrders()">
+        <span>🔄</span> Refresh
+      </button>
+    </div>
+  </div>
 
-  <table class="min-w-full bg-white rounded-lg shadow overflow-hidden">
-    <thead class="bg-gray-100">
-      <tr class="text-left">
-        <th class="p-4">Order ID</th>
-        <th class="p-4">Customer</th>
-        <th class="p-4">Total</th>
-        <th class="p-4">Status</th>
-        <th class="p-4">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let order of orders" class="border-t">
-        <td class="p-4">#{{ order.id }}</td>
-        <td class="p-4">{{ order.customerName }}</td>
-        <td class="p-4">₹{{ order.total }}</td>
-        <td class="p-4">{{ order.status }}</td>
-        <td class="p-4">
-          <button class="text-blue-600" (click)="viewOrder(order)">View</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <!-- Stats Cards -->
+  <div class="stat-cards">
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Total Orders</h4>
+        <p class="stat-number">{{ orders.length }}</p>
+        <span class="trend positive">↗ {{ getNewOrdersCount() }} new today</span>
+      </div>
+      <div class="stat-icon blue">📦</div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Pending</h4>
+        <p class="stat-number">{{ getStatusCount('pending') }}</p>
+        <span class="trend warning">⚠ Needs attention</span>
+      </div>
+      <div class="stat-icon orange">⏳</div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Completed</h4>
+        <p class="stat-number">{{ getStatusCount('completed') }}</p>
+        <span class="trend positive">✓ This month</span>
+      </div>
+      <div class="stat-icon green">✅</div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Revenue</h4>
+        <p class="stat-number">₹{{ getTotalRevenue() }}</p>
+        <span class="trend positive">↗ Total earnings</span>
+      </div>
+      <div class="stat-icon purple">💰</div>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="card filters-card">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label>🔍 Search</label>
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm"
+          (input)="applyFilters()"
+          placeholder="Search orders, customers...">
+      </div>
+
+      <div class="filter-group">
+        <label>📊 Status</label>
+        <select [(ngModel)]="statusFilter" (change)="applyFilters()">
+          <option value="">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="processing">Processing</option>
+          <option value="shipped">Shipped</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>📅 Date Range</label>
+        <select [(ngModel)]="dateFilter" (change)="applyFilters()">
+          <option value="">All Time</option>
+          <option value="today">Today</option>
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <button class="btn-reset" (click)="resetFilters()">
+          🔄 Reset Filters
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Orders List -->
+  <div class="orders-section">
+    <div class="section-header">
+      <h3>All Orders ({{ filteredOrders.length }})</h3>
+      <div class="view-toggle">
+        <button 
+          class="view-btn" 
+          [class.active]="viewMode === 'card'"
+          (click)="viewMode = 'card'"
+          title="Card View">
+          ▦
+        </button>
+        <button 
+          class="view-btn" 
+          [class.active]="viewMode === 'table'"
+          (click)="viewMode = 'table'"
+          title="Table View">
+          ☰
+        </button>
+      </div>
+    </div>
+
+    <!-- Card View -->
+    <div class="orders-grid" *ngIf="viewMode === 'card' && filteredOrders.length > 0">
+      <div class="order-card" *ngFor="let order of filteredOrders">
+        <div class="order-header">
+          <div class="order-id">
+            <span class="id-badge">#{{ order.id }}</span>
+            <span class="order-date">{{ order.created_at | date: 'MMM d, yyyy' }}</span>
+          </div>
+          <div class="status-badge" [ngClass]="order.status">
+            {{ getStatusIcon(order.status) }} {{ order.status | titlecase }}
+          </div>
+        </div>
+
+        <div class="order-customer">
+          <div class="customer-avatar">{{ getInitials(order.user?.name || 'Guest') }}</div>
+          <div class="customer-info">
+            <h4>{{ order.user?.name || 'Guest User' }}</h4>
+            <p>{{ order.user?.email || 'N/A' }}</p>
+          </div>
+        </div>
+
+        <div class="order-items">
+          <div class="items-preview">
+            <img 
+              *ngFor="let item of getFirstThreeItems(order.items)" 
+              [src]="getItemImage(item)" 
+              [alt]="item.product_name">
+          </div>
+          <span class="items-count">{{ order.items.length }} item(s)</span>
+        </div>
+
+        <div class="order-footer">
+          <div class="order-amount">
+            <span class="amount-label">Total</span>
+            <span class="amount-value">₹{{ order.total_amount }}</span>
+          </div>
+          <button class="btn-view" (click)="viewOrder(order)">
+            View Details →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table View -->
+    <div class="orders-table" *ngIf="viewMode === 'table' && filteredOrders.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Date</th>
+            <th>Items</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of filteredOrders">
+            <td>
+              <span class="id-badge">#{{ order.id }}</span>
+            </td>
+            <td>
+              <div class="table-customer">
+                <div class="customer-avatar small">{{ getInitials(order.user?.name || 'G') }}</div>
+                <div>
+                  <div class="customer-name">{{ order.user?.name || 'Guest' }}</div>
+                  <div class="customer-email">{{ order.user?.email || 'N/A' }}</div>
+                </div>
+              </div>
+            </td>
+            <td>{{ order.created_at | date: 'MMM d, yyyy' }}</td>
+            <td>{{ order.items.length }} item(s)</td>
+            <td class="amount">₹{{ order.total_amount }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="order.status">
+                {{ order.status | titlecase }}
+              </span>
+            </td>
+            <td>
+              <div class="table-actions">
+                <button class="btn-icon view" (click)="viewOrder(order)" title="View Details">
+                  👁️
+                </button>
+                <button class="btn-icon edit" (click)="updateStatus(order)" title="Update Status">
+                  ✏️
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredOrders.length === 0">
+      <div class="empty-icon">📦</div>
+      <h3>No Orders Found</h3>
+      <p>{{ orders.length === 0 ? 'No orders have been placed yet.' : 'Try adjusting your filters.' }}</p>
+      <button class="btn-primary" (click)="resetFilters()" *ngIf="orders.length > 0">
+        🔄 Reset Filters
+      </button>
+    </div>
+  </div>
 
   <!-- Order Details Modal -->
   <app-orders-detail-modal
     *ngIf="selectedOrder"
     [order]="selectedOrder"
-    (close)="closeModal()">
+    (close)="closeModal()"
+    (statusUpdated)="onStatusUpdated($event)">
   </app-orders-detail-modal>
 </div>

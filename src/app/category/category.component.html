@@ -1,0 +1,95 @@
+<div class="category-wrapper">
+  <div class="header-section">
+    <h2>Category Management</h2>
+    <button class="btn-add" (click)="openAddCategory()" *ngIf="!showAddCategory">
+      <span>➕</span> Add Category
+    </button>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stat-cards">
+    <div class="card">
+      <h4>Total Categories</h4>
+      <p>{{ categories.length }}</p>
+      <span class="icon purple">🏷️</span>
+    </div>
+    <div class="card">
+      <h4>Active Products</h4>
+      <p>{{ getTotalProducts() }}</p>
+      <span class="icon blue">📦</span>
+    </div>
+    <div class="card">
+      <h4>Recently Added</h4>
+      <p>{{ getRecentCount() }}</p>
+      <span class="icon green">✨</span>
+    </div>
+  </div>
+
+  <!-- Add/Edit Category Form -->
+  <div *ngIf="showAddCategory" class="card form-card">
+    <h4>{{ editingCategory ? 'Edit Category' : 'Add New Category' }}</h4>
+    <form [formGroup]="categoryForm" (ngSubmit)="submitCategory()">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category Name *</label>
+          <input 
+            type="text" 
+            formControlName="name" 
+            placeholder="e.g., Oyster Mushrooms"
+            [class.error]="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched">
+          <span class="error-text" *ngIf="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched">
+            Category name is required
+          </span>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea 
+            formControlName="description" 
+            rows="3"
+            placeholder="Optional description">
+          </textarea>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="categoryForm.invalid">
+          {{ editingCategory ? 'Update' : 'Create' }} Category
+        </button>
+        <button type="button" class="btn-secondary" (click)="closeAddCategory()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Categories List -->
+  <div class="card categories-list">
+    <h4>All Categories</h4>
+    
+    <div class="category-grid" *ngIf="categories.length > 0">
+      <div class="category-item" *ngFor="let category of categories">
+        <div class="category-info">
+          <div class="category-icon">🍄</div>
+          <div class="category-details">
+            <h5>{{ category.name }}</h5>
+            <p class="description">{{ category.description || 'No description' }}</p>
+            <small class="date">Created: {{ category.created_at | date: 'MMM d, yyyy' }}</small>
+          </div>
+        </div>
+        <div class="category-actions">
+          <button class="btn-edit" (click)="onEdit(category)" title="Edit">
+            ✏️
+          </button>
+          <button class="btn-delete" (click)="onDelete(category.id)" title="Delete">
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="categories.length === 0">
+      <div class="empty-icon">📦</div>
+      <h3>No Categories Yet</h3>
+      <p>Create your first mushroom category to get started!</p>
+    </div>
+  </div>
+</div>

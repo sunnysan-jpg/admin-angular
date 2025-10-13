@@ -21,6 +21,7 @@
 
 import { Component } from '@angular/core';
 import { AuthService } from './services/auth.service';
+import { ThemeService } from './services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -34,7 +35,8 @@ export class AppComponent {
   setTab(tab: string) {
     this.activeTab = tab;
   }
-constructor (private authservice:AuthService){}
+constructor (private authservice:AuthService,private themeService: ThemeService){}
+
   ngOnInit(){
     console.log("sunny")
        this.authservice.isAdmins$.subscribe((status) => {
@@ -42,6 +44,10 @@ constructor (private authservice:AuthService){}
       console.log("end",this.isAdmin)
     });
     console.log("start",this.isAdmin)
+
+        this.themeService.theme$.subscribe(theme => {
+      console.log('Theme changed:', theme);
+    });
   }
 }
 

@@ -1,0 +1,205 @@
+<div class="customers-wrapper">
+  <!-- Header Section -->
+  <div class="header-section">
+    <h2>👥 Customer Management</h2>
+    <div class="header-actions">
+      <button class="btn-export" (click)="exportCustomers()">
+        <span>📥</span> Export
+      </button>
+      <button class="btn-add" (click)="addCustomer()">
+        <span>➕</span> Add Customer
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stat-cards">
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Total Customers</h4>
+        <p class="stat-number">{{ customers.length }}</p>
+        <span class="trend positive">↗ {{ getNewCustomersThisMonth() }} this month</span>
+      </div>
+      <div class="stat-icon blue">👥</div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Active Customers</h4>
+        <p class="stat-number">{{ getActiveCustomers() }}</p>
+        <span class="trend positive">{{ getActivePercentage() }}% of total</span>
+      </div>
+      <div class="stat-icon green">✅</div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Lifetime Value</h4>
+        <p class="stat-number">₹{{ getAvgLifetimeValue() }}</p>
+        <span class="trend neutral">Per customer</span>
+      </div>
+      <div class="stat-icon purple">💰</div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Repeat Customers</h4>
+        <p class="stat-number">{{ getRepeatCustomers() }}</p>
+        <span class="trend positive">{{ getRepeatPercentage() }}% rate</span>
+      </div>
+      <div class="stat-icon orange">🔁</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card filters-card">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label>🔍 Search</label>
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm"
+          (input)="applyFilters()"
+          placeholder="Search by name, email...">
+      </div>
+
+      <div class="filter-group">
+        <label>📊 Status</label>
+        <select [(ngModel)]="statusFilter" (change)="applyFilters()">
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>🏷️ Segment</label>
+        <select [(ngModel)]="segmentFilter" (change)="applyFilters()">
+          <option value="">All Segments</option>
+          <option value="vip">VIP</option>
+          <option value="regular">Regular</option>
+          <option value="new">New</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <button class="btn-reset" (click)="resetFilters()">
+          🔄 Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Customers List -->
+  <div class="customers-section">
+    <div class="section-header">
+      <h3>All Customers ({{ filteredCustomers.length }})</h3>
+      <div class="view-toggle">
+        <button 
+          class="view-btn" 
+          [class.active]="viewMode === 'card'"
+          (click)="viewMode = 'card'">
+          ▦
+        </button>
+        <button 
+          class="view-btn" 
+          [class.active]="viewMode === 'table'"
+          (click)="viewMode = 'table'">
+          ☰
+        </button>
+      </div>
+    </div>
+
+    <!-- Card View -->
+    <div class="customers-grid" *ngIf="viewMode === 'card' && filteredCustomers.length > 0">
+      <div class="customer-card" *ngFor="let customer of filteredCustomers">
+        <div class="customer-header">
+          <div class="customer-avatar">{{ getInitials(customer.name) }}</div>
+          <div class="customer-badge" [class]="customer.segment">
+            {{ customer.segment | uppercase }}
+          </div>
+        </div>
+
+        <div class="customer-info">
+          <h4>{{ customer.name }}</h4>
+          <p class="customer-email">{{ customer.email }}</p>
+          <p class="customer-phone">{{ customer.phone }}</p>
+        </div>
+
+        <div class="customer-stats">
+          <div class="stat-item">
+            <span class="stat-label">Orders</span>
+            <span class="stat-value">{{ customer.totalOrders }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Spent</span>
+            <span class="stat-value">₹{{ customer.totalSpent }}</span>
+          </div>
+        </div>
+
+        <div class="customer-footer">
+          <span class="join-date">Joined {{ customer.joinedDate | date: 'MMM yyyy' }}</span>
+          <div class="customer-actions">
+            <button class="btn-icon" (click)="viewCustomer(customer)">👁️</button>
+            <button class="btn-icon" (click)="editCustomer(customer)">✏️</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table View -->
+    <div class="customers-table" *ngIf="viewMode === 'table' && filteredCustomers.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Segment</th>
+            <th>Orders</th>
+            <th>Total Spent</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let customer of filteredCustomers">
+            <td>
+              <div class="table-customer">
+                <div class="customer-avatar small">{{ getInitials(customer.name) }}</div>
+                <span class="customer-name">{{ customer.name }}</span>
+              </div>
+            </td>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.phone }}</td>
+            <td>
+              <span class="segment-badge" [class]="customer.segment">
+                {{ customer.segment }}
+              </span>
+            </td>
+            <td>{{ customer.totalOrders }}</td>
+            <td class="amount">₹{{ customer.totalSpent }}</td>
+            <td>
+              <span class="status-badge" [class]="customer.status">
+                {{ customer.status }}
+              </span>
+            </td>
+            <td>
+              <div class="table-actions">
+                <button class="btn-icon view" (click)="viewCustomer(customer)">👁️</button>
+                <button class="btn-icon edit" (click)="editCustomer(customer)">✏️</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredCustomers.length === 0">
+      <div class="empty-icon">👥</div>
+      <h3>No Customers Found</h3>
+      <p>{{ customers.length === 0 ? 'No customers registered yet.' : 'Try adjusting your filters.' }}</p>
+    </div>
+  </div>
+</div>

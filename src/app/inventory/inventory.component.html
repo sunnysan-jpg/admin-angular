@@ -1,0 +1,367 @@
+<div class="inventory-wrapper">
+  <!-- Header Section -->
+  <div class="header-section">
+    <h2>📦 Inventory Management</h2>
+    <div class="header-actions">
+      <button class="btn-refresh" (click)="loadInventory()">
+        <span>🔄</span> Refresh
+      </button>
+      <button class="btn-reorder" (click)="openReorderModal()">
+        <span>📋</span> Reorder Report
+      </button>
+      <button class="btn-adjust" (click)="adjustStock()">
+        <span>⚙️</span> Adjust Stock
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stat-cards">
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Total Products</h4>
+        <p class="stat-number">{{ inventory.length }}</p>
+        <span class="trend neutral">{{ getTotalUnits() }} units in stock</span>
+      </div>
+      <div class="stat-icon blue">📦</div>
+    </div>
+
+    <div class="card stat-card alert">
+      <div class="stat-content">
+        <h4>Low Stock Alert</h4>
+        <p class="stat-number">{{ getLowStockCount() }}</p>
+        <span class="trend warning">⚠ Needs attention</span>
+      </div>
+      <div class="stat-icon red">🔔</div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Out of Stock</h4>
+        <p class="stat-number">{{ getOutOfStockCount() }}</p>
+        <span class="trend negative">❌ Urgent reorder</span>
+      </div>
+      <div class="stat-icon orange">📪</div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Stock Value</h4>
+        <p class="stat-number">₹{{ getTotalStockValue() | number }}</p>
+        <span class="trend positive">💰 Total inventory value</span>
+      </div>
+      <div class="stat-icon green">💎</div>
+    </div>
+  </div>
+
+  <!-- Quick Actions & Filters -->
+  <div class="actions-filters-section">
+    <!-- Quick Actions -->
+    <div class="card quick-actions-card">
+      <h3>⚡ Quick Actions</h3>
+      <div class="quick-actions">
+        <button class="action-btn" (click)="bulkUpdate()">
+          <span class="action-icon">📝</span>
+          <span class="action-label">Bulk Update</span>
+        </button>
+        <button class="action-btn" (click)="importStock()">
+          <span class="action-icon">📥</span>
+          <span class="action-label">Import</span>
+        </button>
+        <button class="action-btn" (click)="exportStock()">
+          <span class="action-icon">📤</span>
+          <span class="action-label">Export</span>
+        </button>
+        <button class="action-btn" (click)="printLabels()">
+          <span class="action-icon">🏷️</span>
+          <span class="action-label">Print Labels</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card filters-card">
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label>🔍 Search</label>
+          <input 
+            type="text" 
+            [(ngModel)]="searchTerm"
+            (input)="applyFilters()"
+            placeholder="Search products...">
+        </div>
+
+        <div class="filter-group">
+          <label>📊 Stock Status</label>
+          <select [(ngModel)]="stockFilter" (change)="applyFilters()">
+            <option value="">All Items</option>
+            <option value="in-stock">In Stock</option>
+            <option value="low-stock">Low Stock</option>
+            <option value="out-of-stock">Out of Stock</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>🏷️ Category</label>
+          <select [(ngModel)]="categoryFilter" (change)="applyFilters()">
+            <option value="">All Categories</option>
+            <option *ngFor="let cat of categories" [value]="cat.id">
+              {{ cat.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <button class="btn-reset" (click)="resetFilters()">
+            🔄 Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inventory List -->
+  <div class="inventory-section">
+    <div class="section-header">
+      <h3>Stock Items ({{ filteredInventory.length }})</h3>
+      <div class="view-toggle">
+        <button 
+          class="view-btn" 
+          [class.active]="viewMode === 'card'"
+          (click)="viewMode = 'card'">
+          ▦
+        </button>
+        <button 
+          class="view-btn" 
+          [class.active]="viewMode === 'table'"
+          (click)="viewMode = 'table'">
+          ☰
+        </button>
+      </div>
+    </div>
+
+    <!-- Card View -->
+    <div class="inventory-grid" *ngIf="viewMode === 'card' && filteredInventory.length > 0">
+      <div class="inventory-card" *ngFor="let item of filteredInventory" [class.critical]="item.stockQuantity === 0">
+        <div class="card-header">
+          <img [src]="getProductImage(item.imageUrl)" [alt]="item.name" class="product-image">
+          <div class="stock-badge" [class]="getStockStatus(item)">
+            {{ getStockBadgeText(item) }}
+          </div>
+        </div>
+
+        <div class="card-body">
+          <h4>{{ item.name }}</h4>
+          <p class="category">{{ getCategoryName(item.categoryId) }}</p>
+
+          <div class="stock-info">
+            <div class="stock-bar">
+              <div class="stock-fill" 
+                   [style.width.%]="getStockPercentage(item)"
+                   [class]="getStockStatus(item)">
+              </div>
+            </div>
+            <div class="stock-numbers">
+              <span class="current-stock">{{ item.stockQuantity }} units</span>
+              <span class="min-stock">Min: {{ item.minStock }}</span>
+            </div>
+          </div>
+
+          <div class="item-stats">
+            <div class="stat">
+              <span class="label">Price</span>
+              <span class="value">₹{{ item.price }}</span>
+            </div>
+            <div class="stat">
+              <span class="label">Value</span>
+              <span class="value">₹{{ item.price * item.stockQuantity }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="last-updated">
+            Updated: {{ item.lastUpdated | date: 'MMM d' }}
+          </div>
+          <div class="card-actions">
+            <button class="btn-icon restock" (click)="restockItem(item)" title="Restock">
+              ➕
+            </button>
+            <button class="btn-icon adjust" (click)="adjustItemStock(item)" title="Adjust">
+              ⚙️
+            </button>
+            <button class="btn-icon history" (click)="viewHistory(item)" title="History">
+              📊
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table View -->
+    <div class="inventory-table" *ngIf="viewMode === 'table' && filteredInventory.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>SKU</th>
+            <th>Category</th>
+            <th>Current Stock</th>
+            <th>Min Stock</th>
+            <th>Status</th>
+            <th>Unit Price</th>
+            <th>Stock Value</th>
+            <th>Last Updated</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredInventory" [class.critical]="item.stockQuantity === 0">
+            <td>
+              <div class="table-product">
+                <img [src]="getProductImage(item.imageUrl)" [alt]="item.name" class="product-thumb">
+                <span class="product-name">{{ item.name }}</span>
+              </div>
+            </td>
+            <td><code>{{ item.sku }}</code></td>
+            <td>{{ getCategoryName(item.categoryId) }}</td>
+            <td>
+              <div class="stock-cell">
+                <span class="stock-number" [class.low]="item.stockQuantity < item.minStock">
+                  {{ item.stockQuantity }}
+                </span>
+                <div class="mini-bar">
+                  <div class="mini-fill" 
+                       [style.width.%]="getStockPercentage(item)"
+                       [class]="getStockStatus(item)">
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td>{{ item.minStock }}</td>
+            <td>
+              <span class="status-badge" [class]="getStockStatus(item)">
+                {{ getStockBadgeText(item) }}
+              </span>
+            </td>
+            <td class="amount">₹{{ item.price }}</td>
+            <td class="amount">₹{{ item.price * item.stockQuantity }}</td>
+            <td>{{ item.lastUpdated | date: 'MMM d, yyyy' }}</td>
+            <td>
+              <div class="table-actions">
+                <button class="btn-icon restock" (click)="restockItem(item)" title="Restock">➕</button>
+                <button class="btn-icon adjust" (click)="adjustItemStock(item)" title="Adjust">⚙️</button>
+                <button class="btn-icon history" (click)="viewHistory(item)" title="History">📊</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredInventory.length === 0">
+      <div class="empty-icon">📦</div>
+      <h3>No Inventory Items</h3>
+      <p>{{ inventory.length === 0 ? 'Add products to start tracking inventory.' : 'No items match your filters.' }}</p>
+    </div>
+  </div>
+
+  <!-- Stock Movement History -->
+  <div class="card history-card">
+    <div class="history-header">
+      <h3>📊 Recent Stock Movements</h3>
+      <button class="btn-view-all" (click)="viewAllHistory()">View All →</button>
+    </div>
+    <div class="history-list">
+      <div class="history-item" *ngFor="let movement of recentMovements">
+        <div class="movement-icon" [class]="movement.type">
+          {{ movement.type === 'in' ? '➕' : '➖' }}
+        </div>
+        <div class="movement-details">
+          <h4>{{ movement.productName }}</h4>
+          <p>{{ movement.type === 'in' ? 'Stock Added' : 'Stock Removed' }}</p>
+        </div>
+        <div class="movement-quantity" [class]="movement.type">
+          {{ movement.type === 'in' ? '+' : '-' }}{{ movement.quantity }} units
+        </div>
+        <div class="movement-meta">
+          <span class="movement-by">by {{ movement.user }}</span>
+          <span class="movement-time">{{ movement.timestamp | date: 'short' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stock Adjustment Modal -->
+<div class="modal-overlay" *ngIf="showAdjustModal" (click)="closeAdjustModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>⚙️ Adjust Stock: {{ selectedItem?.name }}</h3>
+      <button class="btn-close" (click)="closeAdjustModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="current-stock-display">
+        <span class="label">Current Stock:</span>
+        <span class="value">{{ selectedItem?.stockQuantity }} units</span>
+      </div>
+      
+      <div class="adjustment-form">
+        <div class="form-group">
+          <label>Adjustment Type</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" [(ngModel)]="adjustmentType" value="add" name="adjType">
+              <span>➕ Add Stock</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" [(ngModel)]="adjustmentType" value="remove" name="adjType">
+              <span>➖ Remove Stock</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" [(ngModel)]="adjustmentType" value="set" name="adjType">
+              <span>🎯 Set Exact Amount</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Quantity</label>
+          <input type="number" [(ngModel)]="adjustmentQuantity" min="0" placeholder="Enter quantity">
+        </div>
+
+        <div class="form-group">
+          <label>Reason</label>
+          <select [(ngModel)]="adjustmentReason">
+            <option value="">Select reason</option>
+            <option value="restock">Restock/Purchase</option>
+            <option value="sale">Sale</option>
+            <option value="damage">Damage/Loss</option>
+            <option value="return">Customer Return</option>
+            <option value="correction">Inventory Correction</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Notes (Optional)</label>
+          <textarea [(ngModel)]="adjustmentNotes" rows="3" placeholder="Add any additional notes..."></textarea>
+        </div>
+
+       <div class="new-stock-preview" *ngIf="adjustmentQuantity && selectedItem">
+  <span class="label">New Stock Level:</span>
+  <span class="value" [class.warning]="getNewStockLevel() < selectedItem.minStock">
+    {{ getNewStockLevel() }} units
+  </span>
+</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeAdjustModal()">Cancel</button>
+      <button class="btn-primary" (click)="submitAdjustment()" [disabled]="!adjustmentQuantity || !adjustmentReason">
+        Save Adjustment
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,270 @@
+// Dark Theme Variables
+:root.dark-theme {
+  // Background colors
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #3a3a3a;
+  --bg-card: #252525;
+  --bg-hover: #333333;
+
+  // Text colors
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --text-muted: #808080;
+
+  // Border colors
+  --border-color: #404040;
+  --border-light: #333333;
+
+  // Keep gradient colors the same
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+// Dark Theme Styles
+.dark-theme {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+
+  // Cards
+  .card, .stat-card, .settings-card, .report-card, 
+  .order-card, .product-card, .customer-card, .inventory-card {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+
+    &:hover {
+      background: var(--bg-hover);
+    }
+  }
+
+  // Inputs
+  input, textarea, select {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+
+    &::placeholder {
+      color: var(--text-muted);
+    }
+
+    &:focus {
+      background: var(--bg-tertiary);
+    }
+  }
+
+  // Tables
+  table {
+    thead {
+      background: var(--bg-secondary);
+      
+      th {
+        color: var(--text-primary);
+        border-color: var(--border-color);
+      }
+    }
+
+    tbody {
+      tr {
+        border-color: var(--border-light);
+
+        &:hover {
+          background: var(--bg-hover);
+        }
+
+        td {
+          color: var(--text-secondary);
+        }
+      }
+    }
+  }
+
+  // Sidebar & Header
+  .sidebar {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+
+    button {
+      color: var(--text-secondary);
+
+      &:hover {
+        background: var(--bg-hover);
+        color: var(--text-primary);
+      }
+
+      &.active {
+        background: var(--gradient-primary);
+        color: white;
+      }
+    }
+  }
+
+  .header {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+  }
+
+  // Text colors
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+  }
+
+  p, span, label {
+    color: var(--text-secondary);
+  }
+
+  // Form groups
+  .form-group {
+    label {
+      color: var(--text-primary);
+    }
+  }
+
+  // Filters
+  .filters-card, .quick-actions-card {
+    background: var(--bg-card);
+  }
+
+  // Empty states
+  .empty-state {
+    background: var(--bg-card);
+    
+    h3 {
+      color: var(--text-primary);
+    }
+
+    p {
+      color: var(--text-muted);
+    }
+  }
+
+  // Modal
+  .modal-container {
+    background: var(--bg-card);
+
+    .modal-header {
+      background: var(--bg-secondary);
+      border-color: var(--border-color);
+
+      h3 {
+        color: var(--text-primary);
+      }
+    }
+
+    .modal-body {
+      background: var(--bg-card);
+    }
+
+    .modal-footer {
+      background: var(--bg-secondary);
+      border-color: var(--border-color);
+    }
+  }
+
+  // Badges and status indicators
+  .status-badge, .segment-badge, .category-badge {
+    &:not(.active):not(.completed):not(.delivered) {
+      filter: brightness(0.8);
+    }
+  }
+
+  // Settings tabs
+  .settings-tabs {
+    background: var(--bg-card);
+
+    .tab-btn {
+      color: var(--text-secondary);
+
+      &:hover {
+        background: var(--bg-hover);
+      }
+
+      &.active {
+        .tab-label {
+          color: white;
+        }
+      }
+    }
+  }
+
+  // Notification items, schedule items, etc.
+  .notification-item, .schedule-item, .session-item,
+  .invoice-item, .integration-card, .api-key-item,
+  .advanced-item, .danger-item {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+
+    &:hover {
+      background: var(--bg-hover);
+    }
+
+    h4 {
+      color: var(--text-primary);
+    }
+
+    p {
+      color: var(--text-secondary);
+    }
+  }
+
+  // Code blocks
+  code {
+    background: var(--bg-secondary);
+    color: #10b981;
+  }
+
+  // Theme selector current theme
+  .theme-btn {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+
+    span:last-child {
+      color: var(--text-secondary);
+    }
+
+    &:hover {
+      border-color: #667eea;
+      background: var(--bg-hover);
+    }
+
+    &.active {
+      span:last-child {
+        color: #667eea;
+      }
+    }
+  }
+
+  // Main content area
+  .main-content {
+    background-color: var(--bg-primary);
+  }
+
+  // Report type cards
+  .report-type-card {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+
+    &:hover {
+      background: var(--bg-hover);
+    }
+
+    h4 {
+      color: var(--text-primary);
+    }
+
+    p {
+      color: var(--text-secondary);
+    }
+  }
+
+  // Analytics wrapper
+  .analytics-wrapper, .customers-wrapper, .inventory-wrapper,
+  .orders-wrapper, .reports-wrapper, .settings-wrapper {
+    background-color: var(--bg-primary);
+  }
+
+  // Dashboard wrapper
+  .dashboard-wrapper {
+    background-color: var(--bg-primary);
+  }
+}

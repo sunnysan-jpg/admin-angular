@@ -1,0 +1,419 @@
+<div class="reports-wrapper">
+  <!-- Header Section -->
+  <div class="header-section">
+    <h2>📊 Reports & Analytics</h2>
+    <div class="header-actions">
+      <button class="btn-schedule" (click)="scheduleReport()">
+        <span>⏰</span> Schedule Report
+      </button>
+      <button class="btn-export" (click)="exportAllReports()">
+        <span>📥</span> Export All
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="stat-cards">
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Total Reports</h4>
+        <p class="stat-number">{{ reports.length }}</p>
+        <span class="trend positive">{{ getGeneratedThisMonth() }} generated this month</span>
+      </div>
+      <div class="stat-icon blue">📄</div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Scheduled Reports</h4>
+        <p class="stat-number">{{ getScheduledCount() }}</p>
+        <span class="trend neutral">→ Active schedules</span>
+      </div>
+      <div class="stat-icon purple">⏰</div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Downloaded</h4>
+        <p class="stat-number">{{ getTotalDownloads() }}</p>
+        <span class="trend positive">↗ Total downloads</span>
+      </div>
+      <div class="stat-icon green">📥</div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Storage Used</h4>
+        <p class="stat-number">{{ getStorageUsed() }} MB</p>
+        <span class="trend warning">{{ getStoragePercentage() }}% of limit</span>
+      </div>
+      <div class="stat-icon orange">💾</div>
+    </div>
+  </div>
+
+  <!-- Report Types -->
+  <div class="report-types-section">
+    <h3>📑 Generate New Report</h3>
+    <div class="report-types-grid">
+      <div class="report-type-card" (click)="generateReport('sales')">
+        <div class="report-icon sales">📊</div>
+        <h4>Sales Report</h4>
+        <p>Comprehensive sales analysis with revenue breakdown</p>
+        <button class="btn-generate">Generate →</button>
+      </div>
+
+      <div class="report-type-card" (click)="generateReport('inventory')">
+        <div class="report-icon inventory">📦</div>
+        <h4>Inventory Report</h4>
+        <p>Stock levels, movements, and valuation details</p>
+        <button class="btn-generate">Generate →</button>
+      </div>
+
+      <div class="report-type-card" (click)="generateReport('customers')">
+        <div class="report-icon customers">👥</div>
+        <h4>Customer Report</h4>
+        <p>Customer insights, segmentation, and behavior</p>
+        <button class="btn-generate">Generate →</button>
+      </div>
+
+      <div class="report-type-card" (click)="generateReport('products')">
+        <div class="report-icon products">🍄</div>
+        <h4>Product Performance</h4>
+        <p>Top sellers, trends, and product analytics</p>
+        <button class="btn-generate">Generate →</button>
+      </div>
+
+      <div class="report-type-card" (click)="generateReport('financial')">
+        <div class="report-icon financial">💰</div>
+        <h4>Financial Report</h4>
+        <p>Revenue, expenses, profit margins analysis</p>
+        <button class="btn-generate">Generate →</button>
+      </div>
+
+      <div class="report-type-card" (click)="generateReport('custom')">
+        <div class="report-icon custom">⚙️</div>
+        <h4>Custom Report</h4>
+        <p>Build your own report with custom metrics</p>
+        <button class="btn-generate">Generate →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card filters-card">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label>🔍 Search Reports</label>
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm"
+          (input)="applyFilters()"
+          placeholder="Search by name or type...">
+      </div>
+
+      <div class="filter-group">
+        <label>📊 Report Type</label>
+        <select [(ngModel)]="typeFilter" (change)="applyFilters()">
+          <option value="">All Types</option>
+          <option value="sales">Sales</option>
+          <option value="inventory">Inventory</option>
+          <option value="customers">Customers</option>
+          <option value="products">Products</option>
+          <option value="financial">Financial</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>📅 Date Range</label>
+        <select [(ngModel)]="dateFilter" (change)="applyFilters()">
+          <option value="">All Time</option>
+          <option value="today">Today</option>
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
+          <option value="quarter">This Quarter</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <button class="btn-reset" (click)="resetFilters()">
+          🔄 Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reports List -->
+  <div class="reports-section">
+    <div class="section-header">
+      <h3>Generated Reports ({{ filteredReports.length }})</h3>
+      <div class="sort-options">
+        <select [(ngModel)]="sortBy" (change)="sortReports()">
+          <option value="date-desc">Newest First</option>
+          <option value="date-asc">Oldest First</option>
+          <option value="name">Name A-Z</option>
+          <option value="size">File Size</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="reports-list" *ngIf="filteredReports.length > 0">
+      <div class="report-card" *ngFor="let report of filteredReports">
+        <div class="report-icon-wrapper" [class]="report.type">
+          <span class="report-type-icon">{{ getReportIcon(report.type) }}</span>
+        </div>
+
+        <div class="report-details">
+          <div class="report-header">
+            <h4>{{ report.name }}</h4>
+            <span class="report-badge" [class]="report.status">
+              {{ report.status | titlecase }}
+            </span>
+          </div>
+
+          <div class="report-meta">
+            <span class="meta-item">
+              <span class="meta-icon">📊</span>
+              {{ report.type | titlecase }}
+            </span>
+            <span class="meta-item">
+              <span class="meta-icon">📅</span>
+              {{ report.generatedDate | date: 'MMM d, yyyy' }}
+            </span>
+            <span class="meta-item">
+              <span class="meta-icon">💾</span>
+              {{ report.fileSize }}
+            </span>
+            <span class="meta-item" *ngIf="report.downloadCount">
+              <span class="meta-icon">📥</span>
+              {{ report.downloadCount }} downloads
+            </span>
+          </div>
+
+          <div class="report-summary" *ngIf="report.summary">
+            <p>{{ report.summary }}</p>
+          </div>
+        </div>
+
+        <div class="report-actions">
+          <button class="action-btn view" (click)="viewReport(report)" title="View">
+            <span>👁️</span> View
+          </button>
+          <button class="action-btn download" (click)="downloadReport(report)" title="Download">
+            <span>📥</span> Download
+          </button>
+          <button class="action-btn share" (click)="shareReport(report)" title="Share">
+            <span>🔗</span> Share
+          </button>
+          <button class="action-btn delete" (click)="deleteReport(report)" title="Delete">
+            <span>🗑️</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredReports.length === 0">
+      <div class="empty-icon">📊</div>
+      <h3>No Reports Found</h3>
+      <p>{{ reports.length === 0 ? 'Generate your first report to get started.' : 'No reports match your filters.' }}</p>
+      <button class="btn-primary" (click)="resetFilters()" *ngIf="reports.length > 0">
+        🔄 Reset Filters
+      </button>
+    </div>
+  </div>
+
+  <!-- Scheduled Reports -->
+  <div class="card scheduled-reports-card">
+    <div class="scheduled-header">
+      <h3>⏰ Scheduled Reports</h3>
+      <button class="btn-add-schedule" (click)="addSchedule()">
+        ➕ Add Schedule
+      </button>
+    </div>
+
+    <div class="scheduled-list" *ngIf="scheduledReports.length > 0">
+      <div class="schedule-item" *ngFor="let schedule of scheduledReports">
+        <div class="schedule-info">
+          <div class="schedule-icon" [class.active]="schedule.isActive">
+            {{ schedule.isActive ? '✓' : '⏸' }}
+          </div>
+          <div class="schedule-details">
+            <h4>{{ schedule.name }}</h4>
+            <p>{{ schedule.type | titlecase }} Report</p>
+          </div>
+        </div>
+
+        <div class="schedule-frequency">
+          <span class="frequency-badge">{{ schedule.frequency }}</span>
+          <span class="next-run">Next: {{ schedule.nextRun | date: 'MMM d, h:mm a' }}</span>
+        </div>
+
+        <div class="schedule-recipients">
+          <span class="recipients-label">📧 {{ schedule.recipients.length }} recipient(s)</span>
+        </div>
+
+        <div class="schedule-actions">
+          <button class="toggle-btn" [class.active]="schedule.isActive" (click)="toggleSchedule(schedule)">
+            {{ schedule.isActive ? '⏸ Pause' : '▶ Resume' }}
+          </button>
+          <button class="edit-btn" (click)="editSchedule(schedule)">✏️</button>
+          <button class="delete-btn" (click)="deleteSchedule(schedule)">🗑️</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-scheduled" *ngIf="scheduledReports.length === 0">
+      <p>No scheduled reports. Set up automated report generation.</p>
+    </div>
+  </div>
+
+  <!-- Report Insights -->
+  <div class="insights-section">
+    <div class="card insights-card">
+      <h3>💡 Report Insights</h3>
+      <div class="insights-grid">
+        <div class="insight-item">
+          <div class="insight-icon">📈</div>
+          <div class="insight-content">
+            <h4>Most Generated</h4>
+            <p class="insight-value">{{ getMostGeneratedType() }}</p>
+            <span class="insight-desc">Report type</span>
+          </div>
+        </div>
+
+        <div class="insight-item">
+          <div class="insight-icon">⏱️</div>
+          <div class="insight-content">
+            <h4>Avg Generation Time</h4>
+            <p class="insight-value">{{ getAvgGenerationTime() }}s</p>
+            <span class="insight-desc">Processing time</span>
+          </div>
+        </div>
+
+        <div class="insight-item">
+          <div class="insight-icon">📊</div>
+          <div class="insight-content">
+            <h4>Peak Usage</h4>
+            <p class="insight-value">{{ getPeakUsageDay() }}</p>
+            <span class="insight-desc">Most active day</span>
+          </div>
+        </div>
+
+        <div class="insight-item">
+          <div class="insight-icon">🎯</div>
+          <div class="insight-content">
+            <h4>Success Rate</h4>
+            <p class="insight-value">{{ getSuccessRate() }}%</p>
+            <span class="insight-desc">Completed reports</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Report Generation Modal -->
+<div class="modal-overlay" *ngIf="showGenerateModal" (click)="closeGenerateModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>📊 Generate {{ selectedReportType | titlecase }} Report</h3>
+      <button class="btn-close" (click)="closeGenerateModal()">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Report Name</label>
+        <input 
+          type="text" 
+          [(ngModel)]="newReport.name" 
+          placeholder="e.g., Monthly Sales Report">
+      </div>
+
+      <div class="form-group">
+        <label>Date Range</label>
+        <div class="date-range-options">
+          <label class="radio-option">
+            <input type="radio" [(ngModel)]="newReport.dateRange" value="today" name="dateRange">
+            <span>Today</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" [(ngModel)]="newReport.dateRange" value="week" name="dateRange">
+            <span>This Week</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" [(ngModel)]="newReport.dateRange" value="month" name="dateRange">
+            <span>This Month</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" [(ngModel)]="newReport.dateRange" value="custom" name="dateRange">
+            <span>Custom Range</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="newReport.dateRange === 'custom'">
+        <div class="date-inputs">
+          <div>
+            <label>From Date</label>
+            <input type="date" [(ngModel)]="newReport.fromDate">
+          </div>
+          <div>
+            <label>To Date</label>
+            <input type="date" [(ngModel)]="newReport.toDate">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Format</label>
+        <div class="format-options">
+          <label class="checkbox-option">
+            <input type="checkbox" [(ngModel)]="newReport.formats.pdf">
+            <span>📄 PDF</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" [(ngModel)]="newReport.formats.excel">
+            <span>📊 Excel</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" [(ngModel)]="newReport.formats.csv">
+            <span>📋 CSV</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Include Sections</label>
+        <div class="sections-options">
+          <label class="checkbox-option" *ngFor="let section of getAvailableSections()">
+            <input type="checkbox" [(ngModel)]="section.selected">
+            <span>{{ section.label }}</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <input type="checkbox" [(ngModel)]="newReport.sendEmail">
+          📧 Send report via email
+        </label>
+      </div>
+
+      <div class="form-group" *ngIf="newReport.sendEmail">
+        <label>Email Recipients</label>
+        <input 
+          type="text" 
+          [(ngModel)]="newReport.emailRecipients" 
+          placeholder="email@example.com, email2@example.com">
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeGenerateModal()">Cancel</button>
+      <button class="btn-primary" (click)="submitGenerateReport()">
+        <span *ngIf="!isGenerating">🚀 Generate Report</span>
+        <span *ngIf="isGenerating">⏳ Generating...</span>
+      </button>
+    </div>
+  </div>
+</div>
