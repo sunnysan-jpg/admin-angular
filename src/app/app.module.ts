@@ -40,7 +40,14 @@ import { OrderDetailsModalComponent } from './orders-detail/orders-detail.compon
 import { CategoryDialogComponent } from './category-dialog/category-dialog.component';
 import { NgChartsModule } from 'ng2-charts';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; // ⬅️ THIS WAS MISSING!
-import { MatCheckboxModule } from '@angular/material/checkbox'; // ⬅️ ADD THIS TOO!
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { CategoryComponent } from './category/category.component';
+import { AnalyticsComponent } from './analytics/analytics.component';
+import { CustomersComponent } from './customers/customers.component';
+import { InventoryComponent } from './inventory/inventory.component';
+import { ReportsComponent } from './reports/reports.component';
+import { SettingsComponent } from './settings/settings.component'; // ⬅️ ADD THIS TOO!
+import { ThemeService } from './services/theme.service';
 
 
 
@@ -57,7 +64,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox'; // ⬅️ ADD TH
     RegisterComponent,
     OrdersComponent,
     OrderDetailsModalComponent,
-    CategoryDialogComponent
+    CategoryDialogComponent,
+    CategoryComponent,
+    AnalyticsComponent,
+    CustomersComponent,
+    InventoryComponent,
+    ReportsComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -89,10 +102,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox'; // ⬅️ ADD TH
     useClass: AuthInterceptor,
     multi: true
   },
+   ThemeService,
 AuthService,
 ProductService,
 AdminGuard,
 AuthGuard],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }

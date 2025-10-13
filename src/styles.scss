@@ -1,6 +1,9 @@
 /* File: src/styles.scss */
 /* Add this to your GLOBAL styles file */
+// Import dark theme
+@import './styles-dark.scss';
 
+// ... rest of your styles
 /* Reset and Base Styles */
 * {
   margin: 0;
@@ -236,4 +239,12 @@ p, h1, h2, h3, h4, h5, h6, span, div, label {
 .mat-mdc-button, .mat-mdc-raised-button, .mat-mdc-stroked-button {
   border-radius: 8px !important;
   transition: all 0.3s ease !important;
+}
+
+.custom-dialog {
+  .mat-dialog-container {
+    border-radius: 16px !important;
+    padding: 0 !important;
+    overflow: hidden;
+  }
 }

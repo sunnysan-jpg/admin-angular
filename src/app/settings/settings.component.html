@@ -1,0 +1,620 @@
+<div class="settings-wrapper">
+  <!-- Header Section -->
+  <div class="header-section">
+    <h2>⚙️ Settings</h2>
+    <div class="header-actions">
+      <button class="btn-reset" (click)="resetToDefault()">
+        <span>🔄</span> Reset to Default
+      </button>
+      <button class="btn-save" (click)="saveAllSettings()">
+        <span>💾</span> Save All Changes
+      </button>
+    </div>
+  </div>
+
+  <!-- Settings Navigation Tabs -->
+  <div class="settings-tabs">
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'general'"
+      (click)="activeTab = 'general'">
+      <span class="tab-icon">🏢</span>
+      <span class="tab-label">General</span>
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'profile'"
+      (click)="activeTab = 'profile'">
+      <span class="tab-icon">👤</span>
+      <span class="tab-label">Profile</span>
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'notifications'"
+      (click)="activeTab = 'notifications'">
+      <span class="tab-icon">🔔</span>
+      <span class="tab-label">Notifications</span>
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'security'"
+      (click)="activeTab = 'security'">
+      <span class="tab-icon">🔒</span>
+      <span class="tab-label">Security</span>
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'billing'"
+      (click)="activeTab = 'billing'">
+      <span class="tab-icon">💳</span>
+      <span class="tab-label">Billing</span>
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'integrations'"
+      (click)="activeTab = 'integrations'">
+      <span class="tab-icon">🔌</span>
+      <span class="tab-label">Integrations</span>
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'advanced'"
+      (click)="activeTab = 'advanced'">
+      <span class="tab-icon">⚡</span>
+      <span class="tab-label">Advanced</span>
+    </button>
+  </div>
+
+  <!-- General Settings -->
+  <div class="settings-content" *ngIf="activeTab === 'general'">
+    <div class="card settings-card">
+      <div class="card-header">
+        <h3>🏢 Business Information</h3>
+        <p>Manage your store's basic information</p>
+      </div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Store Name</label>
+            <input type="text" [(ngModel)]="settings.general.storeName" placeholder="Mushroom Store">
+          </div>
+
+          <div class="form-group">
+            <label>Contact Email</label>
+            <input type="email" [(ngModel)]="settings.general.email" placeholder="info@mushroom.com">
+          </div>
+
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" [(ngModel)]="settings.general.phone" placeholder="+91 98765 43210">
+          </div>
+
+          <div class="form-group">
+            <label>Time Zone</label>
+            <select [(ngModel)]="settings.general.timezone">
+              <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+              <option value="America/New_York">America/New York (EST)</option>
+              <option value="Europe/London">Europe/London (GMT)</option>
+              <option value="Asia/Dubai">Asia/Dubai (GST)</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label>Store Address</label>
+            <textarea [(ngModel)]="settings.general.address" rows="3" placeholder="Enter your store address..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Currency</label>
+            <select [(ngModel)]="settings.general.currency">
+              <option value="INR">Indian Rupee (₹)</option>
+              <option value="USD">US Dollar ($)</option>
+              <option value="EUR">Euro (€)</option>
+              <option value="GBP">British Pound (£)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Language</label>
+            <select [(ngModel)]="settings.general.language">
+              <option value="en">English</option>
+              <option value="hi">Hindi</option>
+              <option value="mr">Marathi</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card settings-card">
+      <div class="card-header">
+        <h3>🎨 Appearance</h3>
+        <p>Customize the look and feel of your admin panel</p>
+      </div>
+      <div class="card-body">
+        <div class="appearance-options">
+         <div class="theme-selector">
+  <label>Theme Mode</label>
+  <div class="theme-buttons">
+    <button 
+      class="theme-btn" 
+      [class.active]="settings.general.theme === 'light'"
+      (click)="changeTheme('light')">
+      <span class="theme-icon">☀️</span>
+      <span>Light</span>
+    </button>
+    <button 
+      class="theme-btn" 
+      [class.active]="settings.general.theme === 'dark'"
+      (click)="changeTheme('dark')">
+      <span class="theme-icon">🌙</span>
+      <span>Dark</span>
+    </button>
+    <button 
+      class="theme-btn" 
+      [class.active]="settings.general.theme === 'auto'"
+      (click)="changeTheme('auto')">
+      <span class="theme-icon">🌓</span>
+      <span>Auto</span>
+    </button>
+  </div>
+  <p class="theme-description">
+    <small>
+      {{ settings.general.theme === 'auto' 
+         ? 'Theme will match your system preference' 
+         : 'Theme is set to ' + settings.general.theme + ' mode' }}
+    </small>
+  </p>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Settings -->
+  <div class="settings-content" *ngIf="activeTab === 'profile'">
+    <div class="card settings-card">
+      <div class="card-header">
+        <h3>👤 Personal Information</h3>
+        <p>Update your personal details</p>
+      </div>
+      <div class="card-body">
+        <div class="profile-section">
+          <div class="avatar-upload">
+            <div class="avatar-preview">
+              <img [src]="settings.profile.avatar || 'assets/default-avatar.png'" alt="Profile">
+            </div>
+            <div class="avatar-actions">
+              <button class="btn-upload">📸 Upload Photo</button>
+              <button class="btn-remove">🗑️ Remove</button>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" [(ngModel)]="settings.profile.firstName" placeholder="John">
+            </div>
+
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" [(ngModel)]="settings.profile.lastName" placeholder="Doe">
+            </div>
+
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" [(ngModel)]="settings.profile.email" placeholder="john@example.com">
+            </div>
+
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" [(ngModel)]="settings.profile.phone" placeholder="+91 98765 43210">
+            </div>
+
+            <div class="form-group">
+              <label>Job Title</label>
+              <input type="text" [(ngModel)]="settings.profile.jobTitle" placeholder="Store Manager">
+            </div>
+
+            <div class="form-group">
+              <label>Department</label>
+              <select [(ngModel)]="settings.profile.department">
+                <option value="admin">Administration</option>
+                <option value="sales">Sales</option>
+                <option value="inventory">Inventory</option>
+                <option value="support">Support</option>
+              </select>
+            </div>
+
+            <div class="form-group full-width">
+              <label>Bio</label>
+              <textarea [(ngModel)]="settings.profile.bio" rows="4" placeholder="Tell us about yourself..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notifications Settings -->
+  <div class="settings-content" *ngIf="activeTab === 'notifications'">
+    <div class="card settings-card">
+      <div class="card-header">
+        <h3>🔔 Email Notifications</h3>
+        <p>Choose what email notifications you want to receive</p>
+      </div>
+      <div class="card-body">
+        <div class="notification-list">
+          <div class="notification-item">
+            <div class="notification-info">
+              <h4>New Orders</h4>
+              <p>Get notified when a new order is placed</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="settings.notifications.newOrders">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notification-info">
+              <h4>Low Stock Alerts</h4>
+              <p>Receive alerts when products are running low</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="settings.notifications.lowStock">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notification-info">
+              <h4>Customer Reviews</h4>
+              <p>Get notified about new customer reviews</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="settings.notifications.reviews">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notification-info">
+              <h4>Daily Reports</h4>
+              <p>Receive daily sales and analytics reports</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="settings.notifications.dailyReports">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notification-info">
+              <h4>Marketing Updates</h4>
+              <p>Get updates about promotions and campaigns</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="settings.notifications.marketing">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card settings-card">
+      <div class="card-header">
+        <h3>📱 Push Notifications</h3>
+        <p>Manage browser push notifications</p>
+      </div>
+      <div class="card-body">
+        <div class="notification-list">
+          <div class="notification-item">
+            <div class="notification-info">
+              <h4>Enable Push Notifications</h4>
+              <p>Receive real-time notifications in your browser</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="settings.notifications.pushEnabled">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notification-info">
+              <h4>Sound Alerts</h4>
+              <p>Play sound when receiving notifications</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="settings.notifications.sound">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Security Settings -->
+  <div class="settings-content" *ngIf="activeTab === 'security'">
+    <div class="card settings-card">
+      <div class="card-header">
+        <h3>🔒 Password & Authentication</h3>
+        <p>Manage your password and security settings</p>
+      </div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Current Password</label>
+            <input type="password" placeholder="Enter current password">
+          </div>
+
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password" placeholder="Enter new password">
+          </div>
+
+          <div class="form-group">
+            <label>Confirm New Password</label>
+            <input type="password" placeholder="Confirm new password">
+          </div>
+
+          <div class="form-group">
+            <button class="btn-change-password">🔐 Change Password</button>
+          </div>
+        </div>
+
+        <div class="security-options">
+          <div class="security-item">
+            <div class="security-info">
+              <h4>Two-Factor Authentication (2FA)</h4>
+              <p>Add an extra layer of security to your account</p>
+              <span class="security-status" [class.enabled]="settings.security.twoFactorEnabled">
+                {{ settings.security.twoFactorEnabled ? '✓ Enabled' : '✕ Disabled' }}
+              </span>
+            </div>
+            <button 
+              class="btn-configure" 
+              (click)="configure2FA()">
+              {{ settings.security.twoFactorEnabled ? 'Configure' : 'Enable' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card settings-card">
+      <div class="card-header">
+        <h3>🔑 Active Sessions</h3>
+        <p>Manage your active login sessions</p>
+      </div>
+      <div class="card-body">
+        <div class="sessions-list">
+          <div class="session-item" *ngFor="let session of activeSessions">
+            <div class="session-icon">{{ session.device === 'desktop' ? '💻' : '📱' }}</div>
+            <div class="session-details">
+              <h4>{{ session.location }}</h4>
+              <p>{{ session.browser }} • {{ session.ip }}</p>
+              <span class="session-time">{{ session.lastActive }}</span>
+            </div>
+            <button class="btn-revoke" (click)="revokeSession(session)" *ngIf="!session.current">
+              Revoke
+            </button>
+            <span class="current-badge" *ngIf="session.current">Current</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Billing Settings -->
+  <div class="settings-content" *ngIf="activeTab === 'billing'">
+    <div class="card settings-card">
+      <div class="card-header">
+        <h3>💳 Payment Method</h3>
+        <p>Manage your payment information</p>
+      </div>
+      <div class="card-body">
+        <div class="payment-methods">
+          <div class="payment-card">
+            <div class="card-info">
+              <div class="card-icon">💳</div>
+              <div class="card-details">
+                <h4>Visa ending in 4242</h4>
+                <p>Expires 12/2025</p>
+              </div>
+            </div>
+            <span class="primary-badge">Primary</span>
+          </div>
+
+          <button class="btn-add-card">➕ Add New Card</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card settings-card">
+      <div class="card-header">
+        <h3>📊 Subscription Plan</h3>
+        <p>Current plan and billing details</p>
+      </div>
+      <div class="card-body">
+        <div class="subscription-info">
+          <div class="plan-details">
+            <div class="plan-badge">🚀 Professional Plan</div>
+            <h3>₹2,999/month</h3>
+            <p>Next billing date: January 15, 2025</p>
+          </div>
+
+          <div class="plan-features">
+            <div class="feature-item">✓ Unlimited Products</div>
+            <div class="feature-item">✓ Advanced Analytics</div>
+            <div class="feature-item">✓ Priority Support</div>
+            <div class="feature-item">✓ Custom Integrations</div>
+          </div>
+
+          <div class="plan-actions">
+            <button class="btn-upgrade">⬆️ Upgrade Plan</button>
+            <button class="btn-cancel">Cancel Subscription</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card settings-card">
+      <div class="card-header">
+        <h3>📄 Billing History</h3>
+        <p>View and download your invoices</p>
+      </div>
+      <div class="card-body">
+        <div class="invoices-list">
+          <div class="invoice-item" *ngFor="let invoice of invoices">
+            <div class="invoice-info">
+              <h4>{{ invoice.date | date: 'MMM d, yyyy' }}</h4>
+              <p>Invoice #{{ invoice.number }}</p>
+            </div>
+            <div class="invoice-amount">₹{{ invoice.amount }}</div>
+            <button class="btn-download">📥 Download</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Integrations Settings -->
+  <div class="settings-content" *ngIf="activeTab === 'integrations'">
+    <div class="card settings-card">
+      <div class="card-header">
+        <h3>🔌 Available Integrations</h3>
+        <p>Connect third-party services to enhance your store</p>
+      </div>
+      <div class="card-body">
+        <div class="integrations-grid">
+          <div class="integration-card" *ngFor="let integration of integrations">
+            <div class="integration-icon">{{ integration.icon }}</div>
+            <div class="integration-details">
+              <h4>{{ integration.name }}</h4>
+              <p>{{ integration.description }}</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="integration.enabled">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card settings-card">
+      <div class="card-header">
+        <h3>🔑 API Keys</h3>
+        <p>Manage your API access keys</p>
+      </div>
+      <div class="card-body">
+        <div class="api-keys-list">
+          <div class="api-key-item">
+            <div class="key-info">
+              <h4>Production API Key</h4>
+              <code class="api-key">pk_live_51M**********************</code>
+            </div>
+            <div class="key-actions">
+              <button class="btn-copy">📋 Copy</button>
+              <button class="btn-regenerate">🔄 Regenerate</button>
+            </div>
+          </div>
+
+          <div class="api-key-item">
+            <div class="key-info">
+              <h4>Test API Key</h4>
+              <code class="api-key">pk_test_51M**********************</code>
+            </div>
+            <div class="key-actions">
+              <button class="btn-copy">📋 Copy</button>
+              <button class="btn-regenerate">🔄 Regenerate</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Advanced Settings -->
+  <div class="settings-content" *ngIf="activeTab === 'advanced'">
+    <div class="card settings-card">
+      <div class="card-header">
+        <h3>⚡ Advanced Options</h3>
+        <p>Configure advanced system settings</p>
+      </div>
+      <div class="card-body">
+        <div class="advanced-options">
+          <div class="advanced-item">
+            <div class="advanced-info">
+              <h4>Maintenance Mode</h4>
+              <p>Temporarily disable your store for maintenance</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="settings.advanced.maintenanceMode">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="advanced-item">
+            <div class="advanced-info">
+              <h4>Debug Mode</h4>
+              <p>Enable detailed error logging (not recommended for production)</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="settings.advanced.debugMode">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="advanced-item">
+            <div class="advanced-info">
+              <h4>Auto Backup</h4>
+              <p>Automatically backup your data daily</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="settings.advanced.autoBackup">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card settings-card danger-zone">
+      <div class="card-header">
+        <h3>⚠️ Danger Zone</h3>
+        <p>Irreversible and destructive actions</p>
+      </div>
+      <div class="card-body">
+        <div class="danger-actions">
+          <div class="danger-item">
+            <div class="danger-info">
+              <h4>Clear Cache</h4>
+              <p>Clear all cached data to free up space</p>
+            </div>
+            <button class="btn-danger-action" (click)="clearCache()">Clear Cache</button>
+          </div>
+
+          <div class="danger-item">
+            <div class="danger-info">
+              <h4>Export All Data</h4>
+              <p>Download a complete backup of your store data</p>
+            </div>
+            <button class="btn-danger-action" (click)="exportData()">Export Data</button>
+          </div>
+
+          <div class="danger-item severe">
+            <div class="danger-info">
+              <h4>Delete Account</h4>
+              <p>Permanently delete your account and all data</p>
+            </div>
+            <button class="btn-danger-severe" (click)="deleteAccount()">Delete Account</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

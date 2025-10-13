@@ -1,155 +1,277 @@
-<!-- <div class="container">
-  <h2>Product Management</h2>
-
-  <div class="header">
-    <button mat-raised-button color="primary" (click)="openAddProductModal()">+ Add Product</button>
-  </div>
-
-  <table class="product-table">
-    <thead>
-      <tr>
-        <th>PRODUCT</th>
-        <th>CATEGORY</th>
-        <th>PRICE</th>
-        <th>STOCK</th>
-        <th>STATUS</th>
-        <th>ACTIONS</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let product of products">
-        <td class="product-name">
-          <img [src]="product.imageUrl" alt="product image" />
-          <span>{{ product.name }}</span>
-        </td>
-        <td>{{ product.category }}</td>
-        <td>₹{{ product.price }}</td>
-        <td [ngClass]="{'low-stock': product.stock < 20}">{{ product.stock }}</td>
-        <td><span class="status-active">{{ product.status }}</span></td>
-        <td>
-          <button mat-icon-button><mat-icon>edit</mat-icon></button>
-          <button mat-icon-button><mat-icon>delete</mat-icon></button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div> -->
-
-
-
-<div class="container py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold text-dark mb-0">Product Management</h2>
-    <button class="btn btn-success" (click)="openAddProduct()">
-      <i class="bi bi-plus-circle"></i> Add Product
+<div class="product-wrapper">
+  <!-- Header Section -->
+  <div class="header-section">
+    <h2>🍄 Product Management</h2>
+    <button class="btn-add" (click)="openAddProduct()" *ngIf="!showAddProduct">
+      <span class="icon">➕</span>
+      <span>Add New Product</span>
     </button>
   </div>
-  <div class="card shadow-sm mb-3">
-    <div class="table-responsive">
-      <table class="table align-middle mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Product</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let product of product">
-          <td>
-            <div class="d-flex align-items-center">
-              <img *ngIf="product.image_url" [src]="product.image_url" alt="img" class="rounded me-2" width="48" height="48">
-              <span class="fw-semibold">{{ product.name }}</span>
-            </div>
-          </td>
-          <td>{{ product.category_id }}</td>
-          <td>₹{{ product.price }}</td>
-          <td>
-            <span [class.text-danger]="product.stock_quantity < 20" [class.fw-bold]="product.stock_quantity < 20">{{ product.stock_quantity }}</span>
-          </td>
-          <td>
-            <span class="badge bg-success">{{ product.status }}</span>
-          </td>
-          <td>
-            <button class="btn btn-sm btn-outline-primary me-1" (click)="onEdit(product)">
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button class="btn btn-sm btn-outline-danger" (click)="onDelete(product.id)">
-              <i class="bi bi-trash"></i>
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+
+  <!-- Stats Cards -->
+  <div class="stat-cards">
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Total Products</h4>
+        <p class="stat-number">{{ product.length }}</p>
+        <span class="trend positive">↗ 12% from last month</span>
+      </div>
+      <div class="stat-icon blue">📦</div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Low Stock Alert</h4>
+        <p class="stat-number">{{ getLowStockCount() }}</p>
+        <span class="trend warning">⚠ Needs attention</span>
+      </div>
+      <div class="stat-icon red">🔔</div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Total Value</h4>
+        <p class="stat-number">₹{{ getTotalValue() }}</p>
+        <span class="trend positive">↗ In stock</span>
+      </div>
+      <div class="stat-icon green">💰</div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-content">
+        <h4>Categories</h4>
+        <p class="stat-number">{{ categories.length }}</p>
+        <span class="trend neutral">→ Active</span>
+      </div>
+      <div class="stat-icon purple">🏷️</div>
     </div>
   </div>
 
-  <!-- Add/Edit Product Modal -->
-  <div *ngIf="showAddProduct" class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.35); z-index:1050;">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form [formGroup]="addProductForm" (ngSubmit)="submitAddProduct()">
-          <div class="modal-header">
-            <h5 class="modal-title">{{ editingProduct ? 'Edit Product' : 'Add New Product' }}</h5>
-            <button type="button" class="btn-close" (click)="showAddProduct = false" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label class="form-label">Product Name</label>
-              <input type="text" formControlName="name" class="form-control" [class.is-invalid]="addProductForm.get('name')?.touched && addProductForm.get('name')?.invalid" required>
-            </div>
-<div class="mb-3">
-  <label class="form-label">Category</label>
-  <div class="input-group">
-    <select formControlName="category" class="form-select">
-      <option value="">Select Category</option>
-      <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
-    </select>
-    <button type="button" class="btn btn-outline-secondary" (click)="openCategoryDialog()">Add</button>
-  </div>
-</div>
+  <!-- Add/Edit Product Form -->
+  <div *ngIf="showAddProduct" class="card form-card animate-slide-down">
+    <div class="form-header">
+      <h3>{{ editingProduct ? '✏️ Edit Product' : '✨ Create New Product' }}</h3>
+      <button class="btn-close" (click)="closeAddProduct()">✕</button>
+    </div>
 
-            <div class="mb-3">
-              <label class="form-label">Price (₹)</label>
-              <input type="number" formControlName="price" class="form-control" min="0" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Stock Quantity</label>
-              <input type="number" formControlName="stock" class="form-control" min="0" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Description</label>
-              <textarea formControlName="description" rows="2" class="form-control"></textarea>
-            </div>
-        <div class="mb-3">
-  <label class="form-label">Product Images</label>
-  <input type="file" (change)="onFileChange($event)" class="form-control" accept="image/*" multiple>
+    <form [formGroup]="addProductForm" (ngSubmit)="submitAddProduct()">
+      <div class="form-grid">
+        <!-- Product Name -->
+        <div class="form-group full-width">
+          <label>Product Name *</label>
+          <input 
+            type="text" 
+            formControlName="name" 
+            placeholder="e.g., Fresh Shiitake Mushrooms"
+            [class.error]="addProductForm.get('name')?.invalid && addProductForm.get('name')?.touched">
+          <span class="error-text" *ngIf="addProductForm.get('name')?.invalid && addProductForm.get('name')?.touched">
+            Product name is required
+          </span>
+        </div>
 
-  <div *ngIf="previewUrls.length > 0" class="mt-2 d-flex gap-2 flex-wrap">
-    <img *ngFor="let url of previewUrls" [src]="url" alt="Preview" style="height: 48px; width: auto;">
-  </div>
-</div>
-
-                        <div class="mb-3">
-              <label class="form-label">Status</label>
-              <select formControlName="status" class="form-select" required>
-                <option value=true>Active</option>
-                <option value=false>InActive</option>
-              </select>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" [disabled]="addProductForm.invalid" class="btn btn-success">
-              {{ editingProduct ? 'Update Product' : 'Add Product' }}
+        <!-- Category -->
+        <div class="form-group">
+          <label>Category *</label>
+          <div class="category-select-wrapper">
+            <select formControlName="category" class="form-select">
+              <option value="">Select Category</option>
+              <option *ngFor="let cat of categories" [value]="cat.id">
+                {{ cat.name }}
+              </option>
+            </select>
+            <button type="button" class="btn-add-category" (click)="openCategoryDialog()" title="Add New Category">
+              ➕
             </button>
-            <button type="button" class="btn btn-secondary" (click)="showAddProduct = false">Cancel</button>
           </div>
-        </form>
+        </div>
+
+        <!-- Price -->
+        <div class="form-group">
+          <label>Price (₹) *</label>
+          <input 
+            type="number" 
+            formControlName="price" 
+            placeholder="0.00"
+            min="0"
+            step="0.01">
+        </div>
+
+        <!-- Stock -->
+        <div class="form-group">
+          <label>Stock Quantity *</label>
+          <input 
+            type="number" 
+            formControlName="stock" 
+            placeholder="0"
+            min="0">
+        </div>
+
+        <!-- Status -->
+        <div class="form-group">
+          <label>Status</label>
+          <div class="toggle-wrapper">
+            <input type="checkbox" id="status-toggle" formControlName="status">
+            <label for="status-toggle" class="toggle-label">
+              <span class="toggle-switch"></span>
+              <span class="toggle-text">{{ addProductForm.get('status')?.value ? 'Active' : 'Inactive' }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group full-width">
+          <label>Description</label>
+          <textarea 
+            formControlName="description" 
+            rows="4"
+            placeholder="Enter product description...">
+          </textarea>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="form-group full-width">
+          <label>Product Images</label>
+          <div class="image-upload-area">
+            <input 
+              type="file" 
+              id="file-input" 
+              multiple 
+              accept="image/*" 
+              (change)="onFileChange($event)"
+              hidden>
+            <label for="file-input" class="upload-label">
+              <div class="upload-content">
+                <span class="upload-icon">📸</span>
+                <p>Click to upload images</p>
+                <small>PNG, JPG up to 5MB each</small>
+              </div>
+            </label>
+          </div>
+
+          <!-- Image Previews -->
+          <div class="image-previews" *ngIf="previewUrls.length > 0">
+            <div class="preview-item" *ngFor="let url of previewUrls; let i = index">
+              <img [src]="url" alt="Preview">
+              <button type="button" class="btn-remove-image" (click)="removeImage(i)">
+                ✕
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="addProductForm.invalid">
+          <span *ngIf="!editingProduct">🚀 Create Product</span>
+          <span *ngIf="editingProduct">💾 Update Product</span>
+        </button>
+        <button type="button" class="btn-secondary" (click)="closeAddProduct()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Products Grid -->
+  <div class="products-section">
+    <div class="section-header">
+      <h3>All Products</h3>
+      <div class="view-toggle">
+        <button 
+          class="view-btn" 
+          [class.active]="viewMode === 'grid'"
+          (click)="viewMode = 'grid'"
+          title="Grid View">
+          ▦
+        </button>
+        <button 
+          class="view-btn" 
+          [class.active]="viewMode === 'list'"
+          (click)="viewMode = 'list'"
+          title="List View">
+          ☰
+        </button>
       </div>
     </div>
+
+    <!-- Grid View -->
+    <div class="products-grid" *ngIf="viewMode === 'grid' && product.length > 0">
+      <div class="product-card" *ngFor="let prod of product">
+        <div class="product-image-wrapper">
+          <img [src]="getFirstImage(prod.image_url)" [alt]="prod.name">
+          <div class="product-badge" [class.low-stock]="prod.stock_quantity < 20">
+            {{ prod.stock_quantity }} in stock
+          </div>
+          <div class="status-badge" [class.active]="prod.status">
+            {{ prod.status ? '✓ Active' : '✕ Inactive' }}
+          </div>
+        </div>
+
+        <div class="product-details">
+          <div class="product-category">
+            <span class="category-badge">{{ getCategoryName(prod.category_id) }}</span>
+          </div>
+          <h4 class="product-name">{{ prod.name }}</h4>
+          <p class="product-description">{{ prod.description || 'No description' }}</p>
+          
+          <div class="product-footer">
+            <div class="product-price">₹{{ prod.price }}</div>
+            <div class="product-actions">
+              <button class="btn-icon edit" (click)="onEdit(prod)" title="Edit">
+                ✏️
+              </button>
+              <button class="btn-icon delete" (click)="onDelete(prod.id)" title="Delete">
+                🗑️
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- List View -->
+    <div class="products-list" *ngIf="viewMode === 'list' && product.length > 0">
+      <div class="list-item" *ngFor="let prod of product">
+        <div class="list-image">
+          <img [src]="getFirstImage(prod.image_url)" [alt]="prod.name">
+        </div>
+        <div class="list-content">
+          <div class="list-info">
+            <h4>{{ prod.name }}</h4>
+            <span class="category-badge">{{ getCategoryName(prod.category_id) }}</span>
+          </div>
+          <p class="list-description">{{ prod.description || 'No description' }}</p>
+        </div>
+        <div class="list-meta">
+          <div class="meta-item">
+            <span class="meta-label">Price</span>
+            <span class="meta-value">₹{{ prod.price }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Stock</span>
+            <span class="meta-value" [class.low]="prod.stock_quantity < 20">{{ prod.stock_quantity }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Status</span>
+            <span class="meta-value" [class.active]="prod.status">{{ prod.status ? 'Active' : 'Inactive' }}</span>
+          </div>
+        </div>
+        <div class="list-actions">
+          <button class="btn-icon edit" (click)="onEdit(prod)">✏️</button>
+          <button class="btn-icon delete" (click)="onDelete(prod.id)">🗑️</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="product.length === 0">
+      <div class="empty-icon">📦</div>
+      <h3>No Products Yet</h3>
+      <p>Start by creating your first mushroom product!</p>
+      <button class="btn-primary" (click)="openAddProduct()">
+        ➕ Add Your First Product
+      </button>
+    </div>
   </div>
 </div>
-

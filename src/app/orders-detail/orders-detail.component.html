@@ -1,20 +1,158 @@
-<div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-  <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md space-y-4">
-    <h3 class="text-lg font-semibold">Order #{{ order.id }}</h3>
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <h2>📦 Order Details</h2>
+        <div class="order-meta">
+          <span class="order-id">#{{ order.id }}</span>
+          <span class="order-date">{{ order.created_at | date: 'MMM d, yyyy, h:mm a' }}</span>
+        </div>
+      </div>
+      <button class="btn-close" (click)="closeModal()">✕</button>
+    </div>
 
-    <!-- <p><strong>Customer:</strong> {{ order.customerName }}</p> -->
-    <!-- <p><strong>Status:</strong> {{ order.status }}</p> -->
-    <p><strong>Total:</strong> ₹{{ order.total }}</p>
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <!-- Status Timeline -->
+      <div class="section status-section">
+        <h3>📊 Order Status</h3>
+        <div class="status-timeline">
+          <div class="timeline-item" [class.active]="isStatusActive('pending')" [class.completed]="isStatusCompleted('pending')">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-label">Pending</span>
+              <span class="timeline-icon">⏳</span>
+            </div>
+          </div>
 
-    <h4 class="mt-4 font-semibold">Items:</h4>
-    <ul class="list-disc pl-6">
-      <!-- <li *ngFor="let item of order">
-        {{ item.name }} × {{ item.quantity }} (₹{{ item.price }})
-      </li> -->
-    </ul>
+          <div class="timeline-item" [class.active]="isStatusActive('processing')" [class.completed]="isStatusCompleted('processing')">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-label">Processing</span>
+              <span class="timeline-icon">⚙️</span>
+            </div>
+          </div>
 
-    <div class="flex justify-end mt-4">
-      <button class="px-4 py-2 bg-gray-300 rounded" (click)="closeModal()">Close</button>
+          <div class="timeline-item" [class.active]="isStatusActive('shipped')" [class.completed]="isStatusCompleted('shipped')">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-label">Shipped</span>
+              <span class="timeline-icon">🚚</span>
+            </div>
+          </div>
+
+          <div class="timeline-item" [class.active]="isStatusActive('delivered')" [class.completed]="isStatusCompleted('delivered')">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-label">Delivered</span>
+              <span class="timeline-icon">✅</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Update Status -->
+        <div class="status-update">
+          <label>Update Order Status</label>
+          <div class="status-actions">
+            <select [(ngModel)]="newStatus" class="status-select">
+              <option value="pending">Pending</option>
+              <option value="processing">Processing</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <button class="btn-update" (click)="updateOrderStatus()">
+              Update Status
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer Information -->
+      <div class="section customer-section">
+        <h3>👤 Customer Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Name</span>
+            <span class="info-value">{{ order.user?.name || 'Guest User' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Email</span>
+            <span class="info-value">{{ order.user?.email || 'N/A' }}</span>
+          </div>
+          <div class="info-item full-width">
+            <span class="info-label">📍 Shipping Address</span>
+            <span class="info-value">{{ order.shipping_address }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Items -->
+      <div class="section items-section">
+        <h3>🛍️ Order Items</h3>
+        <div class="items-list">
+          <div class="item-card" *ngFor="let item of order.items">
+            <img [src]="getItemImage(item)" [alt]="item.product_name" class="item-image">
+            <div class="item-details">
+              <h4>{{ item.product_name }}</h4>
+              <p>Quantity: {{ item.quantity }}</p>
+            </div>
+            <div class="item-price">
+              <span class="price-label">Price</span>
+              <span class="price-value">₹{{ item.price }}</span>
+            </div>
+            <div class="item-total">
+              <span class="total-label">Total</span>
+              <span class="total-value">₹{{ item.price * item.quantity }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="section summary-section">
+        <h3>💰 Order Summary</h3>
+        <div class="summary-details">
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>₹{{ getSubtotal() }}</span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span>₹{{ order.shipping_charge || 0 }}</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total Amount</span>
+            <span>₹{{ order.total_amount }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Information -->
+      <div class="section payment-section">
+        <h3>💳 Payment Information</h3>
+        <div class="payment-info">
+          <div class="payment-method">
+            <span class="payment-icon">💳</span>
+            <div>
+              <p class="payment-label">Payment Method</p>
+              <p class="payment-value">{{ order.payment_method || 'Cash on Delivery' }}</p>
+            </div>
+          </div>
+          <div class="payment-status" [class.paid]="order.payment_status === 'paid'">
+            {{ order.payment_status === 'paid' ? '✓ Paid' : '⏳ Pending' }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeModal()">Close</button>
+      <button class="btn-primary" (click)="printInvoice()">
+        🖨️ Print Invoice
+      </button>
     </div>
   </div>
 </div>
