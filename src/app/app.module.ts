@@ -98,7 +98,7 @@ import { ClickOutsideDirective } from './directives/click-outside.directive';
     NgChartsModule,
       MatProgressSpinnerModule, // ⬅️ THIS FIXES THE ERROR!
     MatCheckboxModule ,
-    FormsModule
+    FormsModule 
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
