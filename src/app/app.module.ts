@@ -48,6 +48,7 @@ import { InventoryComponent } from './inventory/inventory.component';
 import { ReportsComponent } from './reports/reports.component';
 import { SettingsComponent } from './settings/settings.component'; // ⬅️ ADD THIS TOO!
 import { ThemeService } from './services/theme.service';
+import { ClickOutsideDirective } from './directives/click-outside.directive';
 
 
 
@@ -70,7 +71,8 @@ import { ThemeService } from './services/theme.service';
     CustomersComponent,
     InventoryComponent,
     ReportsComponent,
-    SettingsComponent
+    SettingsComponent,
+    ClickOutsideDirective
   ],
   imports: [
     BrowserModule,
