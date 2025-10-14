@@ -1,18 +1,104 @@
-<!-- File: src/app/header/header.component.html -->
-
 <header class="header">
-  <div class="logo">
-    🍄 Mushroom Admin
+  <div class="header-left">
+    <h1>🍄 Mushroom Admin Panel</h1>
   </div>
   
   <div class="header-right">
-    <div class="notification-icon">
-      🔔
-      <span class="badge">3</span>
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input type="text" placeholder="Search..." [(ngModel)]="searchTerm">
+      <span class="search-icon">🔍</span>
     </div>
-    
-    <div class="admin-avatar">
-      AD
+
+    <!-- Notifications -->
+    <div class="notification-wrapper" [class.active]="showNotifications">
+      <button class="icon-btn" (click)="toggleNotifications()">
+        <span class="icon">🔔</span>
+        <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+      </button>
+
+      <!-- Notifications Dropdown -->
+      <div class="dropdown notifications-dropdown" *ngIf="showNotifications" (clickOutside)="showNotifications = false">
+        <div class="dropdown-header">
+          <h3>Notifications</h3>
+          <button class="mark-all-read" (click)="markAllAsRead()">Mark all as read</button>
+        </div>
+
+        <div class="notifications-list">
+          <div 
+            class="notification-item" 
+            *ngFor="let notification of notifications"
+            [class.unread]="!notification.read"
+            (click)="markAsRead(notification)">
+            <div class="notification-icon" [class]="notification.type">
+              {{ getNotificationIcon(notification.type) }}
+            </div>
+            <div class="notification-content">
+              <h4>{{ notification.title }}</h4>
+              <p>{{ notification.message }}</p>
+              <span class="notification-time">{{ notification.time }}</span>
+            </div>
+          </div>
+
+          <div class="empty-notifications" *ngIf="notifications.length === 0">
+            <span class="empty-icon">🔔</span>
+            <p>No notifications yet</p>
+          </div>
+        </div>
+
+        <div class="dropdown-footer">
+          <button class="view-all" (click)="viewAllNotifications()">View All Notifications</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile -->
+    <div class="profile-wrapper" [class.active]="showProfile">
+      <button class="profile-btn" (click)="toggleProfile()">
+        <!-- <img [src]="currentUser?.avatar || 'assets/default-avatar.png'" alt="Profile" class="profile-avatar">
+        <span class="profile-name">{{ currentUser?.name || 'Admin' }}</span>
+        <span class="dropdown-arrow">▼</span> -->
+      </button>
+
+      <!-- Profile Dropdown -->
+      <div class="dropdown profile-dropdown" *ngIf="showProfile" (clickOutside)="showProfile = false">
+        <div class="profile-info">
+          <!-- <img [src]="currentUser?.avatar || 'assets/default-avatar.png'" alt="Profile" class="profile-avatar-large"> -->
+          <!-- <h3>{{ currentUser?.name || 'Admin User' }}</h3>
+          <p>{{ currentUser?.email || 'admin@mushroom.com' }}</p>
+          <span class="role-badge">{{ currentUser?.role || 'Administrator' }}</span> -->
+        </div>
+
+        <div class="dropdown-divider"></div>
+
+        <div class="profile-menu">
+          <button class="menu-item" (click)="navigateTo('/settings'); showProfile = false">
+            <span class="menu-icon">👤</span>
+            <span>My Profile</span>
+          </button>
+          <button class="menu-item" (click)="navigateTo('/settings'); showProfile = false">
+            <span class="menu-icon">⚙️</span>
+            <span>Settings</span>
+          </button>
+          <button class="menu-item" (click)="viewActivity(); showProfile = false">
+            <span class="menu-icon">📊</span>
+            <span>Activity Log</span>
+          </button>
+          <button class="menu-item" (click)="getHelp(); showProfile = false">
+            <span class="menu-icon">❓</span>
+            <span>Help & Support</span>
+          </button>
+        </div>
+
+        <div class="dropdown-divider"></div>
+
+        <div class="profile-footer">
+          <button class="logout-btn" (click)="logout()">
+            <span class="menu-icon">🚪</span>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
-</header>
+</header>   
