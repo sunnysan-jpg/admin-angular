@@ -40,7 +40,7 @@ export class CustomersComponent implements OnInit {
         this.applyFilters();
         this.isLoading = false;
       },
-      error => {
+      (error: any) => {
         this.snackBar.open('Error loading customers', 'Close', { duration: 3000 });
         this.isLoading = false;
       }
