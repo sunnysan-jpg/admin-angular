@@ -33,76 +33,76 @@ export class InventoryComponent implements OnInit {
   inventory: InventoryItem[] = [
     {
       id: 1,
-      name: 'Oyster Mushrooms',
-      sku: 'MSH-OYS-001',
+      name: 'Premium Makhana',
+      sku: 'MAK-PRM-001',
       categoryId: 1,
       stockQuantity: 145,
       minStock: 50,
       maxStock: 200,
-      price: 150,
+      price: 250,
       imageUrl: 'https://via.placeholder.com/100',
       lastUpdated: new Date('2024-12-01')
     },
     {
       id: 2,
-      name: 'Shiitake Mushrooms',
-      sku: 'MSH-SHI-002',
+      name: 'Roasted Makhana',
+      sku: 'MAK-RST-002',
       categoryId: 1,
       stockQuantity: 32,
       minStock: 50,
       maxStock: 200,
-      price: 200,
+      price: 300,
       imageUrl: 'https://via.placeholder.com/100',
       lastUpdated: new Date('2024-12-03')
     },
     {
       id: 3,
-      name: 'Button Mushrooms',
-      sku: 'MSH-BTN-003',
+      name: 'Raw Makhana',
+      sku: 'MAK-RAW-003',
       categoryId: 1,
       stockQuantity: 0,
       minStock: 40,
       maxStock: 150,
-      price: 100,
+      price: 200,
       imageUrl: 'https://via.placeholder.com/100',
       lastUpdated: new Date('2024-11-28')
     },
     {
       id: 4,
-      name: 'Portobello Mushrooms',
-      sku: 'MSH-POR-004',
+      name: 'Flavored Makhana (Peri Peri)',
+      sku: 'MAK-FLV-004',
       categoryId: 2,
       stockQuantity: 78,
       minStock: 30,
       maxStock: 100,
-      price: 180,
+      price: 350,
       imageUrl: 'https://via.placeholder.com/100',
       lastUpdated: new Date('2024-12-02')
     },
     {
       id: 5,
-      name: 'Enoki Mushrooms',
-      sku: 'MSH-ENO-005',
+      name: 'Flavored Makhana (Cheese)',
+      sku: 'MAK-FLV-005',
       categoryId: 2,
       stockQuantity: 15,
       minStock: 25,
       maxStock: 80,
-      price: 150,
+      price: 350,
       imageUrl: 'https://via.placeholder.com/100',
       lastUpdated: new Date('2024-12-01')
     }
   ];
 
   categories = [
-    { id: 1, name: 'Fresh Mushrooms' },
-    { id: 2, name: 'Premium Mushrooms' },
-    { id: 3, name: 'Dried Mushrooms' }
+    { id: 1, name: 'Plain Makhana' },
+    { id: 2, name: 'Flavored Makhana' },
+    { id: 3, name: 'Premium Makhana' }
   ];
 
   recentMovements: StockMovement[] = [
     {
       id: 1,
-      productName: 'Oyster Mushrooms',
+      productName: 'Premium Makhana',
       type: 'in',
       quantity: 50,
       reason: 'Restock',
@@ -111,7 +111,7 @@ export class InventoryComponent implements OnInit {
     },
     {
       id: 2,
-      productName: 'Shiitake Mushrooms',
+      productName: 'Roasted Makhana',
       type: 'out',
       quantity: 25,
       reason: 'Sale',
@@ -120,7 +120,7 @@ export class InventoryComponent implements OnInit {
     },
     {
       id: 3,
-      productName: 'Button Mushrooms',
+      productName: 'Raw Makhana',
       type: 'out',
       quantity: 40,
       reason: 'Sale',

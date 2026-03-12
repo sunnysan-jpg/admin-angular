@@ -36,12 +36,13 @@ export class RegisterComponent {
       this.isLoading = true;
       this.authService.register(this.registerForm.value).subscribe(
         () => {
-          this.snackBar.open('Registration successful! Welcome aboard!', 'Close', { 
+          this.snackBar.open('Registration successful! Welcome aboard!', 'Close', {
             duration: 3000,
             horizontalPosition: 'center',
             verticalPosition: 'top'
           });
-          this.router.navigate(['/products']);
+          this.authService.setAdminLogin(true);
+          this.router.navigate(['/dashboard']);
         },
         error => {
           this.snackBar.open(error.error.message || 'Registration failed. Please try again.', 'Close', { 

@@ -1,7 +1,7 @@
 <div class="product-wrapper">
   <!-- Header Section -->
   <div class="header-section">
-    <h2>🍄 Product Management</h2>
+    <h2>🌾 Product Management</h2>
     <button class="btn-add" (click)="openAddProduct()" *ngIf="!showAddProduct">
       <span class="icon">➕</span>
       <span>Add New Product</span>
@@ -62,7 +62,7 @@
           <input 
             type="text" 
             formControlName="name" 
-            placeholder="e.g., Fresh Shiitake Mushrooms"
+            placeholder="e.g., Premium Roasted Makhana"
             [class.error]="addProductForm.get('name')?.invalid && addProductForm.get('name')?.touched">
           <span class="error-text" *ngIf="addProductForm.get('name')?.invalid && addProductForm.get('name')?.touched">
             Product name is required
@@ -268,7 +268,7 @@
     <div class="empty-state" *ngIf="product.length === 0">
       <div class="empty-icon">📦</div>
       <h3>No Products Yet</h3>
-      <p>Start by creating your first mushroom product!</p>
+      <p>Start by creating your first makhana product!</p>
       <button class="btn-primary" (click)="openAddProduct()">
         ➕ Add Your First Product
       </button>

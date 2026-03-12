@@ -35,23 +35,20 @@ export class CategoryComponent implements OnInit {
       data => {
         this.categories = data;
       },
-      error => {
+      () => {
         this.snackBar.open('Error loading categories', 'Close', { duration: 3000 });
       }
     );
   }
 
-  // Stats methods
   getTotalProducts(): number {
-    // You can fetch this from backend or calculate
-    return 24; // Placeholder - update with real data
+    return 24;
   }
 
   getRecentCount(): number {
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-    
-    return this.categories.filter(cat => 
+    return this.categories.filter(cat =>
       new Date(cat.created_at) > oneWeekAgo
     ).length;
   }
@@ -73,27 +70,25 @@ export class CategoryComponent implements OnInit {
       const categoryData = this.categoryForm.value;
 
       if (this.editingCategory) {
-        // Update existing category
-        // this.productService.updateCategory(this.editingCategory.id, categoryData).subscribe({
-        //   next: () => {
-        //     this.snackBar.open('Category updated successfully! 🎉', 'Close', { duration: 3000 });
-        //     this.loadCategories();
-        //     this.closeAddCategory();
-        //   },
-        //   error: (err) => {
-        //     this.snackBar.open(err.error.message || 'Update failed', 'Close', { duration: 3000 });
-        //   }
-        // });
-      } else {
-        // Create new category
-        this.productService.createCategories(categoryData).subscribe({
+        this.productService.updateCategory(this.editingCategory.id, categoryData).subscribe({
           next: () => {
-            this.snackBar.open('Category created successfully! 🎉', 'Close', { duration: 3000 });
+            this.snackBar.open('Category updated successfully!', 'Close', { duration: 3000 });
             this.loadCategories();
             this.closeAddCategory();
           },
           error: (err) => {
-            this.snackBar.open(err.error.message || 'Creation failed', 'Close', { duration: 3000 });
+            this.snackBar.open(err.error?.message || 'Update failed', 'Close', { duration: 3000 });
+          }
+        });
+      } else {
+        this.productService.createCategories(categoryData).subscribe({
+          next: () => {
+            this.snackBar.open('Category created successfully!', 'Close', { duration: 3000 });
+            this.loadCategories();
+            this.closeAddCategory();
+          },
+          error: (err) => {
+            this.snackBar.open(err.error?.message || 'Creation failed', 'Close', { duration: 3000 });
           }
         });
       }
@@ -110,16 +105,16 @@ export class CategoryComponent implements OnInit {
   }
 
   onDelete(categoryId: number) {
-    if (confirm('Are you sure you want to delete this category? This action cannot be undone. 🗑️')) {
-      // this.productService.deleteCategory(categoryId).subscribe({
-      //   next: () => {
-      //     this.snackBar.open('Category deleted successfully!', 'Close', { duration: 3000 });
-      //     this.loadCategories();
-      //   },
-      //   error: (err) => {
-      //     this.snackBar.open(err.error.message || 'Delete failed', 'Close', { duration: 3000 });
-      //   }
-      // });
+    if (confirm('Are you sure you want to delete this category? This action cannot be undone.')) {
+      this.productService.deleteCategory(categoryId).subscribe({
+        next: () => {
+          this.snackBar.open('Category deleted successfully!', 'Close', { duration: 3000 });
+          this.loadCategories();
+        },
+        error: (err) => {
+          this.snackBar.open(err.error?.message || 'Delete failed', 'Close', { duration: 3000 });
+        }
+      });
     }
   }
 }

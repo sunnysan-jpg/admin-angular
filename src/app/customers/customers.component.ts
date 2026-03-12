@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CustomerService } from '../services/customer.service';
 
 @Component({
   selector: 'app-customers',
@@ -7,74 +8,58 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./customers.component.scss']
 })
 export class CustomersComponent implements OnInit {
-  customers = [
-    {
-      id: 1,
-      name: 'Rahul Sharma',
-      email: 'rahul.sharma@email.com',
-      phone: '+91 98765 43210',
-      segment: 'vip',
-      status: 'active',
-      totalOrders: 45,
-      totalSpent: 125000,
-      joinedDate: new Date('2023-01-15')
-    },
-    {
-      id: 2,
-      name: 'Priya Patel',
-      email: 'priya.patel@email.com',
-      phone: '+91 98765 43211',
-      segment: 'regular',
-      status: 'active',
-      totalOrders: 28,
-      totalSpent: 67000,
-      joinedDate: new Date('2023-03-20')
-    },
-    {
-      id: 3,
-      name: 'Amit Singh',
-      email: 'amit.singh@email.com',
-      phone: '+91 98765 43212',
-      segment: 'new',
-      status: 'active',
-      totalOrders: 5,
-      totalSpent: 8500,
-      joinedDate: new Date('2024-11-10')
-    },
-    {
-      id: 4,
-      name: 'Sneha Reddy',
-      email: 'sneha.reddy@email.com',
-      phone: '+91 98765 43213',
-      segment: 'regular',
-      status: 'inactive',
-      totalOrders: 15,
-      totalSpent: 32000,
-      joinedDate: new Date('2023-06-05')
-    },
-  ];
-
-  filteredCustomers = [...this.customers];
+  customers: any[] = [];
+  filteredCustomers: any[] = [];
   viewMode: 'card' | 'table' = 'card';
   searchTerm: string = '';
   statusFilter: string = '';
   segmentFilter: string = '';
+  isLoading = false;
 
-  constructor(private snackBar: MatSnackBar) {}
+  constructor(private snackBar: MatSnackBar, private customerService: CustomerService) {}
 
   ngOnInit() {
-    this.applyFilters();
+    this.loadCustomers();
+  }
+
+  loadCustomers() {
+    this.isLoading = true;
+    this.customerService.getCustomers().subscribe(
+      (data: any[]) => {
+        this.customers = data.map(u => ({
+          id: u.id,
+          name: u.name,
+          email: u.email,
+          phone: u.phone || 'N/A',
+          segment: this.getSegment(Number(u.total_orders)),
+          status: 'active',
+          totalOrders: Number(u.total_orders),
+          totalSpent: Number(u.total_spent),
+          joinedDate: new Date(u.createdAt)
+        }));
+        this.applyFilters();
+        this.isLoading = false;
+      },
+      error => {
+        this.snackBar.open('Error loading customers', 'Close', { duration: 3000 });
+        this.isLoading = false;
+      }
+    );
+  }
+
+  getSegment(totalOrders: number): string {
+    if (totalOrders === 0) return 'new';
+    if (totalOrders >= 10) return 'vip';
+    return 'regular';
   }
 
   applyFilters() {
     this.filteredCustomers = this.customers.filter(customer => {
-      const searchMatch = !this.searchTerm || 
+      const searchMatch = !this.searchTerm ||
         customer.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         customer.email.toLowerCase().includes(this.searchTerm.toLowerCase());
-
       const statusMatch = !this.statusFilter || customer.status === this.statusFilter;
       const segmentMatch = !this.segmentFilter || customer.segment === this.segmentFilter;
-
       return searchMatch && statusMatch && segmentMatch;
     });
   }
@@ -87,7 +72,7 @@ export class CustomersComponent implements OnInit {
   }
 
   getInitials(name: string): string {
-    return name.split(' ').map(n => n[0]).join('').toUpperCase();
+    return name.split(' ').map((n: string) => n[0]).join('').toUpperCase();
   }
 
   getNewCustomersThisMonth(): number {
@@ -100,10 +85,12 @@ export class CustomersComponent implements OnInit {
   }
 
   getActivePercentage(): number {
+    if (!this.customers.length) return 0;
     return Math.round((this.getActiveCustomers() / this.customers.length) * 100);
   }
 
   getAvgLifetimeValue(): number {
+    if (!this.customers.length) return 0;
     const total = this.customers.reduce((sum, c) => sum + c.totalSpent, 0);
     return Math.round(total / this.customers.length);
   }
@@ -113,6 +100,7 @@ export class CustomersComponent implements OnInit {
   }
 
   getRepeatPercentage(): number {
+    if (!this.customers.length) return 0;
     return Math.round((this.getRepeatCustomers() / this.customers.length) * 100);
   }
 

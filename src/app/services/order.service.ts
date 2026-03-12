@@ -9,12 +9,12 @@ import { Order } from '../order.model';
   providedIn: 'root'
 })
 export class OrderService {
-  private apiUrl = 'http://localhost:3000/api/orders';
+  private apiUrl = 'https://ecommerce-mushroom.onrender.com/api/orders';
 
   constructor(private http: HttpClient) {}
 
   getOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(this.apiUrl);
+    return this.http.get<Order[]>(`${this.apiUrl}/admin/all`);
   }
 
   getOrder(id: number): Observable<Order> {

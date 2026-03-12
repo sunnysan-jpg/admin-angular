@@ -8,7 +8,7 @@
     <!-- Category List -->
     <div class="category-list" *ngIf="!showAddForm">
       <div class="category-item" *ngFor="let cat of categories" (click)="selectCategory(cat)">
-        <div class="category-icon">🍄</div>
+        <div class="category-icon">🌾</div>
         <div class="category-info">
           <h4>{{ cat.name }}</h4>
           <p>{{ cat.description || 'No description' }}</p>
@@ -29,7 +29,7 @@
           <input 
             type="text" 
             formControlName="name" 
-            placeholder="e.g., Oyster Mushrooms"
+            placeholder="e.g., Roasted Makhana"
             autofocus>
         </div>
 

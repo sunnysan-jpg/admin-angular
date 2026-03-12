@@ -1,9 +1,21 @@
-/* File: src/styles.scss */
-/* Add this to your GLOBAL styles file */
-// Import dark theme
-@import './styles-dark.scss';
+/* Modern Makhana Admin Portal - Global Styles */
 
-// ... rest of your styles
+// Modern Color Palette
+$primary: #8B4513;      // Rich brown (makhana shell color)
+$primary-light: #D2691E; // Lighter brown
+$primary-dark: #654321;  // Darker brown
+$accent: #F4A460;        // Sandy brown (makhana color)
+$accent-light: #FFE4B5;  // Moccasin
+$success: #10b981;
+$warning: #f59e0b;
+$error: #ef4444;
+$info: #3b82f6;
+
+// Gradients
+$gradient-primary: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+$gradient-accent: linear-gradient(135deg, #F4A460 0%, #FFE4B5 100%);
+$gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+
 /* Reset and Base Styles */
 * {
   margin: 0;
@@ -11,135 +23,190 @@
   box-sizing: border-box;
 }
 
-/* Dark Theme Background - THIS IS KEY! */
+/* Modern Background with Makhana Theme */
+html {
+  background: #0a0e1a;
+}
+
 body {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+  background: linear-gradient(135deg, #0a0e1a 0%, #1a1f2e 50%, #0f1419 100%) !important;
   min-height: 100vh;
   color: #fff !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   overflow-x: hidden;
+  position: relative;
+
+  // Subtle pattern overlay
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle at 20% 50%, rgba(139, 69, 19, 0.03) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 80%, rgba(244, 164, 96, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
 }
 
-/* Ensure html also has dark background */
-html {
-  background: #0f172a;
-}
-
-/* Custom Scrollbar */
+/* Custom Scrollbar - Modern Design */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  scrollbar-color: rgba(139, 69, 19, 0.5) transparent;
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
+  background: $gradient-primary;
+  border-radius: 10px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+
+  &:hover {
+    background: linear-gradient(135deg, #D2691E 0%, #F4A460 100%);
+  }
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-/* Material Design Overrides for Dark Theme */
+/* Material Design Overrides */
 .mat-toolbar,
 .mat-card,
 .mat-form-field,
 .mat-select,
 .mat-dialog-container {
-  background: rgba(255, 255, 255, 0.05) !important;
+  background: rgba(26, 31, 46, 0.8) !important;
+  backdrop-filter: blur(20px);
   color: #fff !important;
+  border: 1px solid rgba(139, 69, 19, 0.1);
 }
 
-/* Remove any white backgrounds from Material components */
 .mat-drawer-container {
   background: transparent !important;
 }
 
-/* Ensure all text is white on dark background */
-p, h1, h2, h3, h4, h5, h6, span, div, label {
-  color: inherit;
+/* Glassmorphism Card Effect */
+.glass-card {
+  background: rgba(26, 31, 46, 0.7) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(139, 69, 19, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
-// File: src/styles.scss
-// ADD this to your global styles file (at the bottom)
+/* Modern Button Styles */
+.btn-primary {
+  background: $gradient-primary;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
+  position: relative;
+  overflow: hidden;
 
-/* Custom Snackbar Styles */
-.success-snackbar {
-  background: #10b981 !important;
-  color: #fff !important;
-
-  .mat-mdc-snack-bar-label {
-    color: #fff !important;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
   }
 
-  .mat-mdc-button {
-    color: #fff !important;
-  }
-}
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 69, 19, 0.4);
 
-.error-snackbar {
-  background: #ef4444 !important;
-  color: #fff !important;
-
-  .mat-mdc-snack-bar-label {
-    color: #fff !important;
+    &::before {
+      left: 100%;
+    }
   }
 
-  .mat-mdc-button {
-    color: #fff !important;
-  }
-}
-
-.warning-snackbar {
-  background: #f59e0b !important;
-  color: #fff !important;
-
-  .mat-mdc-snack-bar-label {
-    color: #fff !important;
-  }
-
-  .mat-mdc-button {
-    color: #fff !important;
+  &:active {
+    transform: translateY(0);
   }
 }
 
-// Material Snackbar positioning
-.mat-mdc-snack-bar-container {
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  border: 1px solid rgba(139, 69, 19, 0.3);
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(139, 69, 19, 0.1);
+    border-color: rgba(139, 69, 19, 0.5);
+  }
+}
+
+/* Modern Card Styles */
+.card {
+  background: rgba(26, 31, 46, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(139, 69, 19, 0.15);
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border-color: rgba(139, 69, 19, 0.3);
+  }
+}
+
+/* Modern Form Inputs */
+input, textarea, select {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(139, 69, 19, 0.2) !important;
+  color: white !important;
   border-radius: 12px !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+  padding: 12px 16px !important;
+  font-size: 14px !important;
+  transition: all 0.3s ease !important;
+
+  &:focus {
+    outline: none !important;
+    border-color: rgba(139, 69, 19, 0.6) !important;
+    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.4) !important;
+  }
 }
 
-// ADD THIS TO: src/styles.scss (at the bottom)
-
-/* ============================================
-   CUSTOM SNACKBAR STYLES
-   ============================================ */
-
+/* Modern Snackbar Styles */
 .success-snackbar {
   background: linear-gradient(135deg, #10b981, #059669) !important;
   color: #fff !important;
   box-shadow: 0 8px 32px rgba(16, 185, 129, 0.4) !important;
+  border-radius: 12px !important;
 
   .mat-mdc-snack-bar-label {
     color: #fff !important;
     font-weight: 600 !important;
-  }
-
-  .mat-mdc-button {
-    color: #fff !important;
-    
-    &:hover {
-      background: rgba(255, 255, 255, 0.1) !important;
-    }
   }
 }
 
@@ -147,18 +214,11 @@ p, h1, h2, h3, h4, h5, h6, span, div, label {
   background: linear-gradient(135deg, #ef4444, #dc2626) !important;
   color: #fff !important;
   box-shadow: 0 8px 32px rgba(239, 68, 68, 0.4) !important;
+  border-radius: 12px !important;
 
   .mat-mdc-snack-bar-label {
     color: #fff !important;
     font-weight: 600 !important;
-  }
-
-  .mat-mdc-button {
-    color: #fff !important;
-    
-    &:hover {
-      background: rgba(255, 255, 255, 0.1) !important;
-    }
   }
 }
 
@@ -166,85 +226,222 @@ p, h1, h2, h3, h4, h5, h6, span, div, label {
   background: linear-gradient(135deg, #f59e0b, #d97706) !important;
   color: #fff !important;
   box-shadow: 0 8px 32px rgba(245, 158, 11, 0.4) !important;
+  border-radius: 12px !important;
 
   .mat-mdc-snack-bar-label {
     color: #fff !important;
     font-weight: 600 !important;
-  }
-
-  .mat-mdc-button {
-    color: #fff !important;
-    
-    &:hover {
-      background: rgba(255, 255, 255, 0.1) !important;
-    }
   }
 }
 
 .info-snackbar {
-  background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+  background: $gradient-primary !important;
   color: #fff !important;
-  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.4) !important;
+  box-shadow: 0 8px 32px rgba(139, 69, 19, 0.4) !important;
+  border-radius: 12px !important;
 
   .mat-mdc-snack-bar-label {
     color: #fff !important;
     font-weight: 600 !important;
   }
+}
 
-  .mat-mdc-button {
-    color: #fff !important;
-    
-    &:hover {
-      background: rgba(255, 255, 255, 0.1) !important;
+.mat-mdc-snack-bar-container {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+/* Modern Badge Styles */
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+
+  &.success {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
+
+  &.warning {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+
+  &.error {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  &.primary {
+    background: rgba(139, 69, 19, 0.2);
+    color: #D2691E;
+    border: 1px solid rgba(139, 69, 19, 0.3);
+  }
+}
+
+/* Modern Table Styles */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  thead {
+    background: rgba(139, 69, 19, 0.1);
+
+    th {
+      padding: 16px;
+      text-align: left;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.8);
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 1px;
+      border-bottom: 2px solid rgba(139, 69, 19, 0.3);
+    }
+  }
+
+  tbody {
+    tr {
+      transition: all 0.3s ease;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+      &:hover {
+        background: rgba(139, 69, 19, 0.05);
+      }
+
+      td {
+        padding: 16px;
+        color: rgba(255, 255, 255, 0.9);
+      }
     }
   }
 }
 
-// Material Snackbar container styling
-.mat-mdc-snack-bar-container {
-  border-radius: 12px !important;
-  overflow: hidden !important;
-  
-  .mdc-snackbar__surface {
-    border-radius: 12px !important;
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
-/* ============================================
-   MATERIAL DESIGN OVERRIDES FOR DARK THEME
-   ============================================ */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-// Ensure form fields work well with dark theme
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Utility Classes */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease;
+}
+
+/* Material Component Overrides */
+.mat-mdc-button, .mat-mdc-raised-button {
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+}
+
 .mat-mdc-form-field {
   .mat-mdc-text-field-wrapper {
     border-radius: 12px;
   }
 }
 
-// Material icon sizing
-.mat-icon {
-  width: 24px !important;
-  height: 24px !important;
-  font-size: 24px !important;
-}
-
-// Checkbox styling
-.mat-mdc-checkbox {
-  .mdc-checkbox__background {
-    border-radius: 4px !important;
+.custom-dialog {
+  .mat-dialog-container {
+    background: rgba(26, 31, 46, 0.95) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(139, 69, 19, 0.2);
+    border-radius: 20px !important;
+    padding: 0 !important;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   }
 }
 
-// Button hover effects
-.mat-mdc-button, .mat-mdc-raised-button, .mat-mdc-stroked-button {
-  border-radius: 8px !important;
-  transition: all 0.3s ease !important;
+/* Loading Spinner */
+.loading-spinner {
+  border: 3px solid rgba(139, 69, 19, 0.2);
+  border-top: 3px solid #8B4513;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
 }
 
-.custom-dialog {
-  .mat-dialog-container {
-    border-radius: 16px !important;
-    padding: 0 !important;
-    overflow: hidden;
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Typography */
+h1 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+p {
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .card {
+    padding: 16px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 10px 20px;
+    font-size: 13px;
   }
 }

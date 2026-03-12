@@ -46,7 +46,7 @@ export class HeaderComponent implements OnInit {
       id: 2,
       type: 'stock',
       title: 'Low Stock Alert',
-      message: 'Shiitake Mushrooms stock is running low (15 units)',
+      message: 'Premium Makhana stock is running low (15 units)',
       time: '15 minutes ago',
       read: false,
     },

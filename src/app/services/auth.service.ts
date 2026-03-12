@@ -7,7 +7,7 @@ import { User } from '../user.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api/auth';
+  private apiUrl = 'https://ecommerce-mushroom.onrender.com/api/auth';
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
   private isAdminLoggedIn = new BehaviorSubject<boolean>(false);
@@ -41,7 +41,7 @@ export class AuthService {
 
 
     adminlogin(credentials:any): Observable<any>{
-    return this.http.post(`${this.apiUrl}/login`,credentials).pipe(
+    return this.http.post(`${this.apiUrl}/adminlogin`,credentials).pipe(
       tap((response:any)=>{
         if(response.token){
             localStorage.setItem('token', response.token);

@@ -35,7 +35,7 @@
           <input 
             type="text" 
             formControlName="name" 
-            placeholder="e.g., Oyster Mushrooms"
+            placeholder="e.g., Roasted Makhana"
             [class.error]="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched">
           <span class="error-text" *ngIf="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched">
             Category name is required
@@ -68,7 +68,7 @@
     <div class="category-grid" *ngIf="categories.length > 0">
       <div class="category-item" *ngFor="let category of categories">
         <div class="category-info">
-          <div class="category-icon">🍄</div>
+          <div class="category-icon">🌾</div>
           <div class="category-details">
             <h5>{{ category.name }}</h5>
             <p class="description">{{ category.description || 'No description' }}</p>
@@ -89,7 +89,7 @@
     <div class="empty-state" *ngIf="categories.length === 0">
       <div class="empty-icon">📦</div>
       <h3>No Categories Yet</h3>
-      <p>Create your first mushroom category to get started!</p>
+      <p>Create your first makhana category to get started!</p>
     </div>
   </div>
 </div>

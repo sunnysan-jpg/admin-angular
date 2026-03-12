@@ -21,11 +21,11 @@ export class AnalyticsComponent implements OnInit {
     avgDeliveryTime: 3.5,
     customerSatisfaction: 4.6,
     topProducts: [
-      { rank: 1, name: 'Oyster Mushrooms', soldCount: 450, revenue: 67500 },
-      { rank: 2, name: 'Shiitake Mushrooms', soldCount: 380, revenue: 76000 },
-      { rank: 3, name: 'Button Mushrooms', soldCount: 320, revenue: 32000 },
-      { rank: 4, name: 'Portobello Mushrooms', soldCount: 280, revenue: 50400 },
-      { rank: 5, name: 'Enoki Mushrooms', soldCount: 195, revenue: 29250 }
+      { rank: 1, name: 'Premium Makhana', soldCount: 450, revenue: 112500 },
+      { rank: 2, name: 'Roasted Makhana', soldCount: 380, revenue: 114000 },
+      { rank: 3, name: 'Flavored Makhana (Peri Peri)', soldCount: 320, revenue: 112000 },
+      { rank: 4, name: 'Flavored Makhana (Cheese)', soldCount: 280, revenue: 98000 },
+      { rank: 5, name: 'Raw Makhana', soldCount: 195, revenue: 39000 }
     ],
     orderStatus: [
       { name: 'delivered', count: 850, percentage: 68 },

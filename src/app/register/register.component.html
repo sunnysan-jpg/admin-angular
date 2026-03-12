@@ -1,79 +1,160 @@
-<div class="auth-container">
-    <div class="bg-animation">
-    <div class="gradient-orb orb-1"></div>
-    <div class="gradient-orb orb-2"></div>
-    <div class="gradient-orb orb-3"></div>
+<div class="auth-page">
+  <!-- Left Side - Branding -->
+  <div class="auth-brand">
+    <div class="brand-content">
+      <div class="logo-section">
+        <div class="logo-circle">
+          <span class="logo-icon">🌾</span>
+        </div>
+        <h1 class="brand-name">Makhana</h1>
+        <p class="brand-tagline">Premium Admin Portal</p>
+      </div>
+
+      <div class="features">
+        <div class="feature-item">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-text">
+            <h3>Quick Setup</h3>
+            <p>Get started in minutes</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📊</div>
+          <div class="feature-text">
+            <h3>Real-time Analytics</h3>
+            <p>Track your business metrics</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">💎</div>
+          <div class="feature-text">
+            <h3>Premium Features</h3>
+            <p>Everything you need to succeed</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="decoration-dots">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>
+    </div>
   </div>
-  <mat-card class="auth-card">
-    <div class="card-glow"></div>
-    <div class="auth-header">
-      <h2>Create Account</h2>
-      <p class="subtitle">Please fill in your details to register</p>
-    </div>
-    
-    <mat-card-content>
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-        
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Name</mat-label>
-            <input matInput formControlName="name" required>
-            <mat-icon matPrefix>person</mat-icon>
-            <mat-error *ngIf="registerForm.get('name')?.hasError('required')">
-              Required
-            </mat-error>
-          </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Phone</mat-label>
-            <input matInput type="tel" formControlName="phone" required>
-            <mat-icon matPrefix>phone</mat-icon>
-            <mat-error *ngIf="registerForm.get('phone')?.hasError('required')">
-              Required
-            </mat-error>
-          </mat-form-field>
-     
+  <!-- Right Side - Register Form -->
+  <div class="auth-form-container">
+    <div class="auth-form-wrapper">
+      <div class="form-header">
+        <h2>Create Account</h2>
+        <p>Join us and start managing your business</p>
+      </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" required>
-          <mat-icon matPrefix>email</mat-icon>
-          <mat-error *ngIf="registerForm.get('email')?.hasError('required')">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <div class="form-grid">
+          <div class="input-group">
+            <label>Full Name</label>
+            <div class="input-wrapper">
+              <mat-icon class="input-icon">person_outline</mat-icon>
+              <input
+                type="text"
+                formControlName="name"
+                placeholder="Enter your name"
+                [class.error]="registerForm.get('name')?.touched && registerForm.get('name')?.invalid">
+            </div>
+            <span class="error-message" *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.hasError('required')">
+              Name is required
+            </span>
+          </div>
+
+          <div class="input-group">
+            <label>Phone Number</label>
+            <div class="input-wrapper">
+              <mat-icon class="input-icon">phone</mat-icon>
+              <input
+                type="tel"
+                formControlName="phone"
+                placeholder="+91 98765 43210"
+                [class.error]="registerForm.get('phone')?.touched && registerForm.get('phone')?.invalid">
+            </div>
+            <span class="error-message" *ngIf="registerForm.get('phone')?.touched && registerForm.get('phone')?.hasError('required')">
+              Phone is required
+            </span>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Email Address</label>
+          <div class="input-wrapper">
+            <mat-icon class="input-icon">mail_outline</mat-icon>
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="your.email@example.com"
+              [class.error]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+          </div>
+          <span class="error-message" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('required')">
             Email is required
-          </mat-error>
-          <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
-            Enter a valid email
-          </mat-error>
-        </mat-form-field>
+          </span>
+          <span class="error-message" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('email')">
+            Please enter a valid email
+          </span>
+        </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Password</mat-label>
-          <input matInput type="password" formControlName="password" required>
-          <mat-icon matPrefix>lock</mat-icon>
-          <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
+        <div class="input-group">
+          <label>Password</label>
+          <div class="input-wrapper">
+            <mat-icon class="input-icon">lock_outline</mat-icon>
+            <input
+              type="password"
+              formControlName="password"
+              placeholder="Create a strong password"
+              [class.error]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+          </div>
+          <span class="error-message" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.hasError('required')">
             Password is required
-          </mat-error>
-        </mat-form-field>
+          </span>
+        </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Address</mat-label>
-          <input matInput formControlName="address" required>
-          <mat-icon matPrefix>location_on</mat-icon>
-          <mat-error *ngIf="registerForm.get('address')?.hasError('required')">
+        <div class="input-group">
+          <label>Address</label>
+          <div class="input-wrapper">
+            <mat-icon class="input-icon">location_on</mat-icon>
+            <input
+              type="text"
+              formControlName="address"
+              placeholder="Your business address"
+              [class.error]="registerForm.get('address')?.touched && registerForm.get('address')?.invalid">
+          </div>
+          <span class="error-message" *ngIf="registerForm.get('address')?.touched && registerForm.get('address')?.hasError('required')">
             Address is required
-          </mat-error>
-        </mat-form-field>
+          </span>
+        </div>
 
-        <button mat-raised-button color="primary" type="submit"
-                [disabled]="!registerForm.valid || isLoading" class="submit-button">
-          <mat-spinner *ngIf="isLoading" diameter="20" class="button-spinner"></mat-spinner>
-          {{ isLoading ? 'Creating Account...' : 'Register' }}
+        <div class="terms-wrapper">
+          <label class="checkbox-wrapper">
+            <input type="checkbox">
+            <span class="checkmark"></span>
+            <span class="label-text">I agree to the <a href="#">Terms & Conditions</a></span>
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          class="submit-button"
+          [disabled]="!registerForm.valid || isLoading"
+          [class.loading]="isLoading">
+          <span *ngIf="!isLoading">Create Account</span>
+          <span *ngIf="isLoading" class="loading-content">
+            <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+            Creating account...
+          </span>
         </button>
+
+        <div class="form-footer">
+          <p>Already have an account? <a routerLink="/login" class="signin-link">Sign In</a></p>
+        </div>
       </form>
-    </mat-card-content>
-    
-    <div class="auth-footer">
-      <span>Already have an account?</span>
-      <a routerLink="/login" class="link">Sign In</a>
     </div>
-  </mat-card>
+  </div>
 </div>
