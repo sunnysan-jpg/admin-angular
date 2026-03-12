@@ -1,5 +1,4 @@
 
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -23,12 +22,10 @@ export class ProductService {
         }
       });
     }
-    console.log('sunny',this.apiUrl)
     return this.http.get<Product[]>(this.apiUrl, { params });
   }
 
   getProduct(id: number): Observable<Product> {
-    console.log('suanf',this.apiUrl)
     return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
 
@@ -48,8 +45,15 @@ export class ProductService {
     return this.http.get<Category[]>(`${this.apiUrl}/categories`);
   }
 
-
-    createCategories(newCat: any): Observable<Category> {
+  createCategories(newCat: any): Observable<Category> {
     return this.http.post<Category>(`${this.apiUrl}/addcat`, newCat);
+  }
+
+  updateCategory(id: number, data: any): Observable<Category> {
+    return this.http.put<Category>(`${this.apiUrl}/categories/${id}`, data);
+  }
+
+  deleteCategory(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/categories/${id}`);
   }
 }

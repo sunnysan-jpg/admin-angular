@@ -88,7 +88,7 @@ export class ReportsComponent implements OnInit {
       type: 'sales',
       frequency: 'Weekly',
       nextRun: new Date('2024-12-09'),
-      recipients: ['admin@mushroom.com', 'sales@mushroom.com'],
+      recipients: ['admin@makhana.com', 'sales@makhana.com'],
       isActive: true
     },
     {
@@ -97,7 +97,7 @@ export class ReportsComponent implements OnInit {
       type: 'inventory',
       frequency: 'Monthly',
       nextRun: new Date('2024-12-31'),
-      recipients: ['inventory@mushroom.com'],
+      recipients: ['inventory@makhana.com'],
       isActive: true
     },
     {
@@ -106,7 +106,7 @@ export class ReportsComponent implements OnInit {
       type: 'financial',
       frequency: 'Quarterly',
       nextRun: new Date('2025-01-01'),
-      recipients: ['finance@mushroom.com', 'ceo@mushroom.com'],
+      recipients: ['finance@makhana.com', 'ceo@makhana.com'],
       isActive: false
     }
   ];
@@ -170,7 +170,7 @@ export class ReportsComponent implements OnInit {
       'sales': '📊',
       'inventory': '📦',
       'customers': '👥',
-      'products': '🍄',
+      'products': '🌾',
       'financial': '💰'
     };
     return icons[type] || '📄';

@@ -14,7 +14,7 @@ export class OrderService {
   constructor(private http: HttpClient) {}
 
   getOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(this.apiUrl);
+    return this.http.get<Order[]>(`${this.apiUrl}/admin/all`);
   }
 
   getOrder(id: number): Observable<Order> {

@@ -1,88 +1,114 @@
-<div class="login-wrapper">
-  <!-- Animated background -->
-  <div class="bg-animation">
-    <div class="gradient-orb orb-1"></div>
-    <div class="gradient-orb orb-2"></div>
-    <div class="gradient-orb orb-3"></div>
+<div class="auth-page">
+  <!-- Left Side - Branding -->
+  <div class="auth-brand">
+    <div class="brand-content">
+      <div class="logo-section">
+        <div class="logo-circle">
+          <span class="logo-icon">🌾</span>
+        </div>
+        <h1 class="brand-name">Makhana</h1>
+        <p class="brand-tagline">Premium Admin Portal</p>
+      </div>
+
+      <div class="features">
+        <div class="feature-item">
+          <div class="feature-icon">✨</div>
+          <div class="feature-text">
+            <h3>Modern Dashboard</h3>
+            <p>Intuitive and powerful analytics</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🚀</div>
+          <div class="feature-text">
+            <h3>Fast Performance</h3>
+            <p>Lightning-fast operations</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🔒</div>
+          <div class="feature-text">
+            <h3>Secure Access</h3>
+            <p>Enterprise-grade security</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="decoration-dots">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>
+    </div>
   </div>
 
-  <!-- Login card -->
-  <div class="login-card">
-    <div class="card-glow"></div>
-    
-    <div class="login-header">
-      <div class="icon-wrapper">
-        <mat-icon class="login-icon">lock_open</mat-icon>
+  <!-- Right Side - Login Form -->
+  <div class="auth-form-container">
+    <div class="auth-form-wrapper">
+      <div class="form-header">
+        <h2>Welcome Back!</h2>
+        <p>Sign in to continue to your dashboard</p>
       </div>
-      <h1 class="login-title">Welcome Back</h1>
-      <p class="login-subtitle">Enter your credentials to continue</p>
-    </div>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-      
-      <!-- Email Input -->
-      <div class="form-group">
-        <label class="input-label">Email Address</label>
-        <div class="input-container">
-          <mat-icon class="input-icon">email</mat-icon>
-          <input 
-            type="email" 
-            formControlName="email" 
-            placeholder="Enter your email"
-            class="form-input"
-            [class.error]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <div class="input-group">
+          <label>Email Address</label>
+          <div class="input-wrapper">
+            <mat-icon class="input-icon">mail_outline</mat-icon>
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="your.email@example.com"
+              [class.error]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+          </div>
+          <span class="error-message" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.hasError('required')">
+            Email is required
+          </span>
+          <span class="error-message" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.hasError('email')">
+            Please enter a valid email
+          </span>
         </div>
-        <span class="error-text" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.hasError('required')">
-          Email is required
-        </span>
-        <span class="error-text" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.hasError('email')">
-          Please enter a valid email
-        </span>
-      </div>
 
-      <!-- Password Input -->
-      <div class="form-group">
-        <label class="input-label">Password</label>
-        <div class="input-container">
-          <mat-icon class="input-icon">lock</mat-icon>
-          <input 
-            type="password" 
-            formControlName="password" 
-            placeholder="Enter your password"
-            class="form-input"
-            [class.error]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+        <div class="input-group">
+          <label>Password</label>
+          <div class="input-wrapper">
+            <mat-icon class="input-icon">lock_outline</mat-icon>
+            <input
+              type="password"
+              formControlName="password"
+              placeholder="Enter your password"
+              [class.error]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+          </div>
+          <span class="error-message" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.hasError('required')">
+            Password is required
+          </span>
         </div>
-        <span class="error-text" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.hasError('required')">
-          Password is required
-        </span>
-      </div>
 
-      <!-- Submit Button -->
-      <button 
-        type="submit" 
-        class="submit-btn"
-        [disabled]="!loginForm.valid || isLoading"
-        [class.loading]="isLoading">
-        <span *ngIf="!isLoading" class="btn-text">
-          Sign In
-          <mat-icon>arrow_forward</mat-icon>
-        </span>
-        <span *ngIf="isLoading" class="btn-text">
-          <mat-icon class="spinner">sync</mat-icon>
-          Signing in...
-        </span>
-      </button>
+        <div class="form-options">
+          <label class="checkbox-wrapper">
+            <input type="checkbox">
+            <span class="checkmark"></span>
+            <span class="label-text">Remember me</span>
+          </label>
+          <a href="#" class="forgot-link">Forgot Password?</a>
+        </div>
 
-    </form>
+        <button
+          type="submit"
+          class="submit-button"
+          [disabled]="!loginForm.valid || isLoading"
+          [class.loading]="isLoading">
+          <span *ngIf="!isLoading">Sign In</span>
+          <span *ngIf="isLoading" class="loading-content">
+            <mat-icon class="spinner">sync</mat-icon>
+            Signing in...
+          </span>
+        </button>
 
-    <div class="login-footer">
-      <div class="divider">
-        <span>OR</span>
-      </div>
-      <p class="signup-text">
-        Don't have an account? 
-        <a routerLink="/register" class="signup-link">Create one now</a>
-      </p>
+        <div class="form-footer">
+          <p>Don't have an account? <a routerLink="/register" class="signup-link">Create Account</a></p>
+        </div>
+      </form>
     </div>
   </div>
 </div>

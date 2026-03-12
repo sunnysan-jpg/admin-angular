@@ -37,8 +37,8 @@ export class SettingsComponent implements OnInit {
 
   settings = {
     general: {
-      storeName: 'Mushroom Store',
-      email: 'admin@mushroom.com',
+      storeName: 'Makhana Store',
+      email: 'admin@makhana.com',
       phone: '+91 98765 43210',
       timezone: 'Asia/Kolkata',
       address: '123 Main Street, Pimpri, Maharashtra, India',
@@ -49,7 +49,7 @@ export class SettingsComponent implements OnInit {
     profile: {
       firstName: 'Admin',
       lastName: 'User',
-      email: 'admin@mushroom.com',
+      email: 'admin@makhana.com',
       phone: '+91 98765 43210',
       jobTitle: 'Store Manager',
       department: 'admin',

@@ -162,7 +162,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   // Top Products Bar Chart
   topProductsChartData: ChartData<'bar'> = {
-    labels: ['Oyster', 'Shiitake', 'Button', 'Portobello', 'Enoki'],
+    labels: ['Premium', 'Roasted', 'Peri Peri', 'Cheese', 'Raw'],
     datasets: [{
       label: 'Sales',
       data: [45, 38, 32, 28, 22],
