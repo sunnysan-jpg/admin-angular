@@ -5,13 +5,13 @@
   
   <div class="header-right">
     <!-- Search Bar -->
-    <div class="search-bar">
+    <div *ngIf="isLogin" class="search-bar">
       <input type="text" placeholder="Search..." [(ngModel)]="searchTerm">
       <span class="search-icon">🔍</span>
     </div>
 
     <!-- Notifications -->
-    <div class="notification-wrapper" [class.active]="showNotifications">
+    <div  *ngIf="isLogin" class="notification-wrapper" [class.active]="showNotifications">
       <button class="icon-btn" (click)="toggleNotifications()">
         <span class="icon">🔔</span>
         <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
@@ -53,7 +53,7 @@
     </div>
 
     <!-- Profile -->
-    <div class="profile-wrapper" [class.active]="showProfile">
+    <div  *ngIf="isLogin" class="profile-wrapper" [class.active]="showProfile">
       <button class="profile-btn" (click)="toggleProfile()">
         <!-- <img [src]="currentUser?.avatar || 'assets/default-avatar.png'" alt="Profile" class="profile-avatar">
         <span class="profile-name">{{ currentUser?.name || 'Admin' }}</span>

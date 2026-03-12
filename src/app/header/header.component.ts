@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../services/auth.service';
 
 interface Notification {
   id: number;
@@ -21,20 +22,16 @@ interface User {
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
   searchTerm: string = '';
   showNotifications: boolean = false;
   showProfile: boolean = false;
   unreadCount: number = 0;
+  isLogin: boolean = false;
 
-  currentUser: User = {
-    name: 'Admin User',
-    email: 'admin@mushroom.com',
-    role: 'Administrator',
-    avatar: 'assets/default-avatar.png'
-  };
+  currentUser: any = {};
 
   notifications: Notification[] = [
     {
@@ -43,7 +40,7 @@ export class HeaderComponent implements OnInit {
       title: 'New Order Received',
       message: 'Order #12345 has been placed by John Doe',
       time: '2 minutes ago',
-      read: false
+      read: false,
     },
     {
       id: 2,
@@ -51,7 +48,7 @@ export class HeaderComponent implements OnInit {
       title: 'Low Stock Alert',
       message: 'Shiitake Mushrooms stock is running low (15 units)',
       time: '15 minutes ago',
-      read: false
+      read: false,
     },
     {
       id: 3,
@@ -59,7 +56,7 @@ export class HeaderComponent implements OnInit {
       title: 'New Customer Registration',
       message: 'Sarah Wilson has created a new account',
       time: '1 hour ago',
-      read: false
+      read: false,
     },
     {
       id: 4,
@@ -67,7 +64,7 @@ export class HeaderComponent implements OnInit {
       title: 'Order Delivered',
       message: 'Order #12340 has been successfully delivered',
       time: '2 hours ago',
-      read: true
+      read: true,
     },
     {
       id: 5,
@@ -75,21 +72,27 @@ export class HeaderComponent implements OnInit {
       title: 'System Update',
       message: 'New features have been added to your dashboard',
       time: '1 day ago',
-      read: true
-    }
+      read: true,
+    },
   ];
 
   constructor(
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
     this.calculateUnreadCount();
     // You can load user data from AuthService here
-    // this.authService.currentUser$.subscribe(user => {
-    //   this.currentUser = user;
-    // });
+    this.authService.currentUser$.subscribe((user) => {
+      if (user) {
+        this.currentUser = user;
+      }
+    });
+
+    this.isLogin = this.authService.isAuthenticated()
+    console.log("lis",this.isLogin)
   }
 
   toggleNotifications() {
@@ -103,15 +106,15 @@ export class HeaderComponent implements OnInit {
   }
 
   calculateUnreadCount() {
-    this.unreadCount = this.notifications.filter(n => !n.read).length;
+    this.unreadCount = this.notifications.filter((n) => !n.read).length;
   }
 
   getNotificationIcon(type: string): string {
     const icons: any = {
-      'order': '🛍️',
-      'stock': '📦',
-      'customer': '👤',
-      'system': '⚙️'
+      order: '🛍️',
+      stock: '📦',
+      customer: '👤',
+      system: '⚙️',
     };
     return icons[type] || '🔔';
   }
@@ -120,13 +123,17 @@ export class HeaderComponent implements OnInit {
     notification.read = true;
     this.calculateUnreadCount();
     // Handle notification click action
-    this.snackBar.open('Notification marked as read', 'Close', { duration: 2000 });
+    this.snackBar.open('Notification marked as read', 'Close', {
+      duration: 2000,
+    });
   }
 
   markAllAsRead() {
-    this.notifications.forEach(n => n.read = true);
+    this.notifications.forEach((n) => (n.read = true));
     this.calculateUnreadCount();
-    this.snackBar.open('All notifications marked as read', 'Close', { duration: 2000 });
+    this.snackBar.open('All notifications marked as read', 'Close', {
+      duration: 2000,
+    });
   }
 
   viewAllNotifications() {
@@ -150,7 +157,7 @@ export class HeaderComponent implements OnInit {
     if (confirm('Are you sure you want to logout?')) {
       this.snackBar.open('Logging out...', 'Close', { duration: 2000 });
       // Call your auth service logout
-      // this.authService.logout();
+        this.authService.logout();
       this.router.navigate(['/login']);
     }
   }
