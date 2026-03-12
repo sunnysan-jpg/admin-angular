@@ -3,8 +3,11 @@
 <div class="main-wrapper">
   <app-header></app-header>
   
-  <div class="content-layout">
-    <app-sidebar></app-sidebar>
+  <div  class="content-layout">
+    <div *ngIf=" this.isAdmin">
+      <app-sidebar></app-sidebar>
+    </div>
+    
     
     <main class="main-content">
       <router-outlet></router-outlet>
